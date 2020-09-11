@@ -17,25 +17,20 @@ Using it looks like this::
 
     from turtleIutv import *
     drawing()
-    forward(100)
-    left(90)
-    forward(100)
-
-Using it looks like this::
-
-    from turtleIutv import Turtle
-    t = Turtle()
-    t.speed(5)
+    speed(5)
     colours=["red","blue","yellow","brown","black","purple","green"]
-
-    t.penup(); t.left(90); t.forward(200);t.right(90);t.pendown()
-    for i in range (0,18):
-        t.pencolor(colours[i%7])
-        t.right(20)
-        t.forward(50)
-
-    t.right(180)
-    t.home()
+    up() 
+    left(90)
+    forward(200)
+    right(90)
+    down()
+    i = 0
+    while i < 18:
+        setColor(colours[i%7])
+        right(20)
+        forward(50)
+        i += 1
+    goto(200, 200)
 
 .. image:: sample.png
 
