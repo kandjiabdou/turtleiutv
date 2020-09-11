@@ -3,15 +3,15 @@ from distutils.core import setup
 with open("README.rst", "r") as f:
     readme = f.read()
 
-setup(name='mobilechelonian',
+setup(name='turtleIutv',
       version='0.5',
       description='Turtles in the Jupyter Notebook',
       long_description = readme,
-      author='Thomas Kluyver',
-      author_email='thomas@kluyver.me.uk',
-      url='https://github.com/takluyver/mobilechelonian',
-      packages=['mobilechelonian'],
-      package_data={'mobilechelonian': ['mobilechelonianjs/*.js']},
+      author='Mathieu Lacroix',
+      author_email='lacroix@univ-paris13.fr',
+      url='https://github.com/mathieuLacroix/turtleIutv.git',
+      packages=['turtleIutv'],
+      package_data={'turtleIutv': ['turtleIutv/*.js']},
       classifiers=[
           'Framework :: IPython',
           'Intended Audience :: Education',

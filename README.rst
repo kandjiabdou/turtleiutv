@@ -10,11 +10,11 @@ I could have based this on either, but I had to pick one).
 
 Install it in a terminal/command prompt with::
 
-    pip install mobilechelonian
+    pip install git+https://github.com/mathieuLacroix/turtleIutv.git
 
 Using it looks like this::
 
-    from mobilechelonian import Turtle
+    from turtleIutv import Turtle
     t = Turtle()
     t.speed(5)
     colours=["red","blue","yellow","brown","black","purple","green"]
@@ -31,4 +31,4 @@ Using it looks like this::
 .. image:: sample.png
 
 .. image:: http://mybinder.org/badge.svg
-   :target: https://beta.mybinder.org/v2/gh/takluyver/mobilechelonian/master?filepath=try.ipynb
+   :target: https://beta.mybinder.org/v2/gh/lacroix/turtleIutv/master?filepath=try.ipynb
