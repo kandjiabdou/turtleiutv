@@ -53,17 +53,17 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
         
         // onFrame variables
         this.oldPen=1;
-        this.oldX = 200;
-        this.oldY = 200;
+        this.oldX = 400;
+        this.oldY = 400;
         this.oldRotation=0;
         this.oldColour="black";
         this.newPen=1;
-        this.newX=200; 
-        this.newY=200;
+        this.newX=400; 
+        this.newY=400;
         this.newRotation=0;
         this.newColour="black";
-        this.veryOldX = 200;
-        this.veryOldY = 200;
+        this.veryOldX = 400;
+        this.veryOldY = 400;
         this.turtleSpeed = 1;
 
         // counts each turtle command
@@ -321,8 +321,8 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
             
             var canvas = document.createElement('canvas');
             canvas.id     = "canvas1";
-            canvas.width  = 401;
-            canvas.height = 401;
+            canvas.width  = 801;
+            canvas.height = 801;
             canvas.resize;
 
             canvasDiv.append(canvas);

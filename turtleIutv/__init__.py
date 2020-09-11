@@ -20,7 +20,7 @@ class Turtle(widgets.DOMWidget):
     # thing on every sync
     points = List(sync=True)
 
-    SIZE = 400
+    SIZE = 800
     OFFSET = 20
     def __init__(self):
         '''Create a Turtle.
@@ -216,8 +216,8 @@ class Turtle(widgets.DOMWidget):
 
             t.home()
         '''
-        self.posX = 200
-        self.posY = 200
+        self.posX = 400
+        self.posY = 400
         if 90 < self.bearing <=270:
             self.b_change = - (self.bearing - 90)
         else:
