@@ -1,3 +1,5 @@
+Fork of Turtle package `mobilechelonian <https://github.com/takluyver/mobilechelonian>`.
+
 *"Nevertheless... the turtle moves!"* - Small Gods, by Terry Pratchett
 
 This is a Turtle module for the Jupyter Notebook. It's based on code by

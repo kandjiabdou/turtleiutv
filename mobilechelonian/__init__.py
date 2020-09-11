@@ -10,6 +10,7 @@ __version__ = '0.4'
 
 def install_js():
     pkgdir = os.path.dirname(__file__)
+    print("pkgdir = ", pkgdir)
     nbextensions.install_nbextension(os.path.join(pkgdir, 'mobilechelonianjs'),
                                      user=True)
 
