@@ -11,11 +11,11 @@ __version__ = '0.4'
 def install_js():
     pkgdir = os.path.dirname(__file__)
     print("pkgdir = ", pkgdir)
-    nbextensions.install_nbextension(os.path.join(pkgdir, 'mobilechelonianjs'),
+    nbextensions.install_nbextension(os.path.join(pkgdir, 'turtleIutvjs'),
                                      user=True)
 
 class Turtle(widgets.DOMWidget):
-    _view_module = Unicode("nbextensions/mobilechelonianjs/turtlewidget").tag(sync=True)
+    _view_module = Unicode("nbextensions/turtleIutvjs/turtlewidget").tag(sync=True)
     _view_name = Unicode('TurtleView').tag(sync=True)
     # TODO: Make this an eventful list, so we're not transferring the whole
     # thing on every sync

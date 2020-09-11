@@ -1,4 +1,4 @@
-define(['nbextensions/mobilechelonianjs/paper', "@jupyter-widgets/base"], function(paperlib, widget){
+define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(paperlib, widget){
     
     function TurtleDrawing(canvas_element, grid_button, help_button) {
         this.points = [];
