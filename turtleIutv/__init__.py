@@ -230,34 +230,100 @@ class Turtle(widgets.DOMWidget):
 turtleTmp = None
 
 def drawing():
+    """Start a drawing
+
+    Example::
+
+    drawing()
+    """
     global turtleTmp
     turtleTmp = Turtle()
     turtleTmp.speed(5)
 
 def forward(n):
+    '''Move the Turtle forward by n units.
+
+        Example:
+
+            forward(100)
+        '''
     turtleTmp.forward(n)
 
+def backward(n):
+    '''Move the Turtle backward by n units.
+
+        Example:
+
+            backward(100)
+        '''
+    turtleTmp.backward(n)
+
+
 def left(n):
+    def forward(n):
+    '''Turn the Turtle n degrees to the left.
+
+        Example:
+
+            left(90)
+        '''
     turtleTmp.left(n)
 
+def speed(n):
+    """Change the speed of the Turtle.
+
+        Example:
+
+            speed(5)
+    """
+    if n < 1:
+        n = 1
+    elif n > 10:
+        n = 10
+    turtleTmp.speed(n)
 
 def right(n):
+    '''Turn the Turtle n degrees to the right.
+
+    Example:
+
+        right(90)
+    '''
     turtleTmp.right(n)
 
 def goto(x, y):
+    """Change the position of the Turtle.
+
+        Example::
+
+            goto(100, 100)
+    """
     turtleTmp.setposition(x,y)
 
 def up():
+    """Lift up the pen.
+
+        Example::
+
+            up()
+    """
     turtleTmp.penup()
 
 def down():
+    """Put down the pen. Turtles start with their pen down.
+
+        Example::
+
+            down()
+    """
     turtleTmp.pendown()
 
-
 def setColor(color):
+    """Change the color of the pen.
+        Known colors: "red", "blue", "yellow", "brown", "black", "purple", "green"
+
+        Example::
+
+            setColor("red")
+    """
     turtleTmp.pencolor(color)
-
-
-def deb():
-    pkgdir = os.path.dirname(__file__)
-    print(pkgdir)
