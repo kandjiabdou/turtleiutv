@@ -224,3 +224,35 @@ class Turtle(widgets.DOMWidget):
             self.b_change = 90 - self.bearing
         self.bearing = 90
         self._add_point()
+
+
+
+turtleTmp = None
+
+def drawing():
+    global turtleTmp
+    turtleTmp = Turtle()
+    turtleTmp.speed(5)
+
+def forward(n):
+    turtleTmp.forward(n)
+
+def left(n):
+    turtleTmp.left(n)
+
+
+def right(n):
+    turtleTmp.right(n)
+
+def goto(x, y):
+    turtleTmp.setposition(x,y)
+
+def up():
+    turtleTmp.penup()
+
+def down():
+    turtleTmp.pendown()
+
+
+def setColor(color):
+    turtleTmp.pencolor(color)

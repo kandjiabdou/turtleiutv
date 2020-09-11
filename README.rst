@@ -12,6 +12,15 @@ Install it in a terminal/command prompt with::
 
     pip install git+https://github.com/mathieuLacroix/turtleIutv.git
 
+
+Using it looks like this::
+
+    from turtleIutv import Turtle
+    drawing()
+    forward(100)
+    left(90)
+    forward(100)
+
 Using it looks like this::
 
     from turtleIutv import Turtle
