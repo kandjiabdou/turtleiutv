@@ -260,7 +260,6 @@ def backward(n):
 
 
 def left(n):
-    def forward(n):
     '''Turn the Turtle n degrees to the left.
 
         Example:
