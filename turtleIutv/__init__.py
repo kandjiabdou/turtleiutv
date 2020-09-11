@@ -256,3 +256,8 @@ def down():
 
 def setColor(color):
     turtleTmp.pencolor(color)
+
+
+def deb():
+    pkgdir = os.path.dirname(__file__)
+    print(pkgdir)

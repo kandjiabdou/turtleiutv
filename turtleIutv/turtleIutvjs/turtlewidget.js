@@ -42,7 +42,7 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
         
         this.help_button = help_button;
         this.help_button.click(function (event){
-            alert("example:\nfrom turtleIutv import Turtle\ndrawing()\nforward(50)\n");
+            alert("example:\nfrom turtleIutv import *\ndrawing()\nforward(50)\n");
         });
         
         // some variable to play with still

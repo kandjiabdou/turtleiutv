@@ -15,7 +15,7 @@ Install it in a terminal/command prompt with::
 
 Using it looks like this::
 
-    from turtleIutv import Turtle
+    from turtleIutv import *
     drawing()
     forward(100)
     left(90)
