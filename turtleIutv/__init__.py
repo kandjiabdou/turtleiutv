@@ -10,7 +10,8 @@ __version__ = '0.4'
 
 def install_js():
     pkgdir = os.path.dirname(__file__)
-    nbextensions.install_nbextension(os.path.join(pkgdir, 'turtleIutvjs'))
+    nbextensions.install_nbextension(os.path.join(pkgdir, 'turtleIutvjs'),
+                                     user=True)
 
 class Turtle(widgets.DOMWidget):
     _view_module = Unicode("nbextensions/turtleIutvjs/turtlewidget").tag(sync=True)
