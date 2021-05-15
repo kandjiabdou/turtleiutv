@@ -105,7 +105,7 @@ class Turtle(widgets.DOMWidget):
         if self.posY < Turtle.OFFSET:
             self.posY = Turtle.OFFSET
 
-        check_size()
+        turtleTmp.check_size()
 
         if self.posX > Turtle.SIZE - Turtle.OFFSET:
             self.posX = Turtle.SIZE - Turtle.OFFSET
@@ -130,7 +130,7 @@ class Turtle(widgets.DOMWidget):
         if self.posY < Turtle.OFFSET:
             self.posY = Turtle.OFFSET
 
-        check_size()
+        turtleTmp.check_size()
 
         if self.posX > Turtle.SIZE - Turtle.OFFSET:
             self.posX = Turtle.SIZE - Turtle.OFFSET
