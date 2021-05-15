@@ -97,7 +97,10 @@ class Turtle(widgets.DOMWidget):
 
             t.forward(100)
         '''
-        raise ValueError("This is a test if size can change")
+        try :
+            x = 1/0
+        except ZeroDivisionError as err:
+            print('Test err Handling run-time error:', err)
 
         self.posX += round(num * math.sin(math.radians(self.bearing)), 1)
         self.posY -= round(num * math.cos(math.radians(self.bearing)), 1)
@@ -124,7 +127,6 @@ class Turtle(widgets.DOMWidget):
 
             t.backward(100)
         '''
-        raise ValueError("This is a test if size can change")
         
         self.posX -= round(num * math.sin(math.radians(self.bearing)), 1)
         self.posY += round(num * math.cos(math.radians(self.bearing)), 1)
