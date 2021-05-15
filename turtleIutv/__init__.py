@@ -97,10 +97,6 @@ class Turtle(widgets.DOMWidget):
 
             t.forward(100)
         '''
-        try :
-            x = 1/0
-        except ZeroDivisionError as err:
-            print('Test err Handling run-time error:', err)
 
         self.posX += round(num * math.sin(math.radians(self.bearing)), 1)
         self.posY -= round(num * math.cos(math.radians(self.bearing)), 1)
@@ -110,7 +106,7 @@ class Turtle(widgets.DOMWidget):
         if self.posY < Turtle.OFFSET:
             self.posY = Turtle.OFFSET
 
-        turtleTmp.check_size()
+        check_size()
 
         if self.posX > Turtle.SIZE - Turtle.OFFSET:
             self.posX = Turtle.SIZE - Turtle.OFFSET
@@ -136,7 +132,7 @@ class Turtle(widgets.DOMWidget):
         if self.posY < Turtle.OFFSET:
             self.posY = Turtle.OFFSET
 
-        turtleTmp.check_size()
+        check_size()
 
         if self.posX > Turtle.SIZE - Turtle.OFFSET:
             self.posX = Turtle.SIZE - Turtle.OFFSET
@@ -337,6 +333,7 @@ def setColor(color):
     """
     turtleTmp.pencolor(color)
 def check_size():
+    print("--- Checking size ---\n")
     if self.posX > Turtle.SIZE - Turtle.OFFSET:
         raise ValueError("X Size is to big")
     if self.posY > Turtle.SIZE - Turtle.OFFSET:
