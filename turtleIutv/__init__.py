@@ -13,14 +13,14 @@ def install_js():
     nbextensions.install_nbextension(os.path.join(pkgdir, 'turtleIutvjs'),
                                      user=True)
 
-class Turtle(widgets.DOMWidget, size = 400):
+class Turtle(widgets.DOMWidget):
     _view_module = Unicode("nbextensions/turtleIutvjs/turtlewidget").tag(sync=True)
     _view_name = Unicode('TurtleView').tag(sync=True)
     # TODO: Make this an eventful list, so we're not transferring the whole
     # thing on every sync
     points = List(sync=True)
 
-    SIZE = size
+    SIZE = 400
     OFFSET = 10
     def __init__(self):
         '''Create a Turtle.
@@ -255,8 +255,9 @@ def drawing(size=400, turtle=False):
     """
     assert size>=400 and size<=1000, "La taille doit être compris entre 400 et 1000"
     global turtleTmp
-    turtleTmp = Turtle(size)
+    turtleTmp = Turtle()
     turtleTmp.speed(5)
+    turtleTmp.SIZE=size
 
 def forward(n):
     '''Move the Turtle forward by n units.
