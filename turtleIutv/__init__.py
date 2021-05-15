@@ -97,6 +97,7 @@ class Turtle(widgets.DOMWidget):
 
             t.forward(100)
         '''
+        raise ValueError("This is a test")
         self.posX += round(num * math.sin(math.radians(self.bearing)), 1)
         self.posY -= round(num * math.cos(math.radians(self.bearing)), 1)
 
