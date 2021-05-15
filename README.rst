@@ -10,7 +10,7 @@ I could have based this on either, but I had to pick one).
 
 Install it in a terminal/command prompt with::
 
-    pip install git+https://github.com/mathieuLacroix/turtleIutv.git
+    pip install git+https://gitlab.sorbonne-paris-nord.fr/11928898/turtleiutv.git
 
 
 Using it looks like this::
