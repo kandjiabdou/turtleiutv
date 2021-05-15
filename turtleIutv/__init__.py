@@ -102,15 +102,17 @@ class Turtle(widgets.DOMWidget):
         self.posY -= round(num * math.cos(math.radians(self.bearing)), 1)
 
         if self.posX < Turtle.OFFSET:
+            print("Déppasement plus petit OFFSET X")
             self.posX = Turtle.OFFSET
         if self.posY < Turtle.OFFSET:
+            print("Déppasement plus petit OFFSET Y")
             self.posY = Turtle.OFFSET
 
-        check_size()
-
         if self.posX > Turtle.SIZE - Turtle.OFFSET:
+            print("Déppasement OFFSET X")
             self.posX = Turtle.SIZE - Turtle.OFFSET
         if self.posY > Turtle.SIZE - Turtle.OFFSET:
+            print("Déppasement OFFSET Y")
             self.posY = Turtle.SIZE - Turtle.OFFSET
 
         self.b_change = 0
@@ -131,8 +133,6 @@ class Turtle(widgets.DOMWidget):
             self.posX = Turtle.OFFSET
         if self.posY < Turtle.OFFSET:
             self.posY = Turtle.OFFSET
-
-        check_size()
 
         if self.posX > Turtle.SIZE - Turtle.OFFSET:
             self.posX = Turtle.SIZE - Turtle.OFFSET
@@ -332,9 +332,3 @@ def setColor(color):
             setColor("red")
     """
     turtleTmp.pencolor(color)
-def check_size():
-    print("--- Checking size ---\n")
-    if self.posX > Turtle.SIZE - Turtle.OFFSET:
-        raise ValueError("X Size is to big")
-    if self.posY > Turtle.SIZE - Turtle.OFFSET:
-        raise ValueError("Y Size is to big")
