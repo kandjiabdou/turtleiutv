@@ -192,6 +192,9 @@ class Turtle(widgets.DOMWidget):
     def _translateX(self):
         for p in self.points:
             print("--> Point : ",p)
+        for p in self.points:
+            p['x'] -= Turtle.OFFSET
+            print("--> Point : ",p)
 
     def circle(self, radius, extent=360):
         """Draw a circle, or part of a circle.
