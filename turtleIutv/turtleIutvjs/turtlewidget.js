@@ -298,6 +298,7 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
             var toinsert = $('<div/>');
             var turtleArea = $('<div/>');
             turtleArea.attr('id','turtle-canvas-area');
+            turtleArea.css('text-align','center');
             toinsert.append(turtleArea);
 
             var buttonDiv = $('<div/>');
@@ -314,10 +315,10 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
             gridButton.attr('value', 0);
             gridButton.append("Grid On/Off");
             buttonDiv.append(gridButton);
-            toinsert.append(buttonDiv);
+            turtleArea.append(buttonDiv);
 
             var canvasDiv = $('<div/>');
-            toinsert.append(canvasDiv);
+            turtleArea.append(canvasDiv);
             
             var canvas = document.createElement('canvas');
             canvas.id     = "canvas1";
