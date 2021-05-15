@@ -103,16 +103,20 @@ class Turtle(widgets.DOMWidget):
 
         if self.posX < Turtle.OFFSET:
             print("Déppasement plus petit OFFSET X")
+            Turtle.SIZE+=Turtle.OFFSET
             self.posX = Turtle.OFFSET
         if self.posY < Turtle.OFFSET:
             print("Déppasement plus petit OFFSET Y")
+            Turtle.SIZE+=Turtle.OFFSET
             self.posY = Turtle.OFFSET
 
         if self.posX > Turtle.SIZE - Turtle.OFFSET:
             print("Déppasement OFFSET X")
+            Turtle.SIZE+=Turtle.OFFSET
             self.posX = Turtle.SIZE - Turtle.OFFSET
         if self.posY > Turtle.SIZE - Turtle.OFFSET:
             print("Déppasement OFFSET Y")
+            Turtle.SIZE+=Turtle.OFFSET
             self.posY = Turtle.SIZE - Turtle.OFFSET
 
         self.b_change = 0
