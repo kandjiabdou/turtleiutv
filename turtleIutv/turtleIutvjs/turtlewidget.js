@@ -295,11 +295,9 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
     // Define the DatePickerView
     var TurtleView = widget.DOMWidgetView.extend({
         render: function(){
-            var toinsert = $('<div/>');
             var turtleArea = $('<div/>');
             turtleArea.attr('id','turtle-canvas-area');
             turtleArea.css('text-align','center');
-            toinsert.append(turtleArea);
 
             var buttonDiv = $('<div/>');
             buttonDiv.attr('target','button-area');
@@ -331,7 +329,7 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
             this.turtledrawing = new TurtleDrawing(canvas, gridButton, helpButton);
             this.turtledrawing.points = this.model.get('points');
             
-            this.$el.append(toinsert);
+            this.$el.append(turtleArea);
             window.debugturtle = this;
         },
         update: function(options) {

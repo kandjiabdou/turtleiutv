@@ -105,6 +105,8 @@ class Turtle(widgets.DOMWidget):
         if self.posY < Turtle.OFFSET:
             self.posY = Turtle.OFFSET
 
+        check_size()
+
         if self.posX > Turtle.SIZE - Turtle.OFFSET:
             self.posX = Turtle.SIZE - Turtle.OFFSET
         if self.posY > Turtle.SIZE - Turtle.OFFSET:
@@ -127,6 +129,8 @@ class Turtle(widgets.DOMWidget):
             self.posX = Turtle.OFFSET
         if self.posY < Turtle.OFFSET:
             self.posY = Turtle.OFFSET
+
+        check_size()
 
         if self.posX > Turtle.SIZE - Turtle.OFFSET:
             self.posX = Turtle.SIZE - Turtle.OFFSET
@@ -326,3 +330,8 @@ def setColor(color):
             setColor("red")
     """
     turtleTmp.pencolor(color)
+def check_size():
+    if self.posX > Turtle.SIZE - Turtle.OFFSET:
+        raise ValueError("X Size is to big")
+    if self.posY > Turtle.SIZE - Turtle.OFFSET:
+        raise ValueError("Y Size is to big")
