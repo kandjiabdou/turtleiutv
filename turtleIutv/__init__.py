@@ -103,7 +103,7 @@ class Turtle(widgets.DOMWidget):
 
         if self.posX < Turtle.OFFSET:
             print("Déppasement plus petit OFFSET X")
-            Turtle.SIZE+=Turtle.OFFSET
+            self._translateX()
             self.posX = Turtle.OFFSET
         if self.posY < Turtle.OFFSET:
             print("Déppasement plus petit OFFSET Y")
@@ -188,6 +188,10 @@ class Turtle(widgets.DOMWidget):
         p = dict(p=self.pen, lc=self.color, x=self.posX, y=self.posY,
                  b=self.b_change, s=self.speedVar)
         self.points = self.points + [p]
+
+    def _translateX(self):
+        for p in self.points:
+            print("--> Point : ",p)
 
     def circle(self, radius, extent=360):
         """Draw a circle, or part of a circle.
