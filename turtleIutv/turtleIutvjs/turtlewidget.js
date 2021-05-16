@@ -1,6 +1,6 @@
 define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(paperlib, widget){
     
-    function TurtleDrawing(canvas_element, grid_button, help_button) {
+    function TurtleDrawing(canvas_element, grid_button, minus_button,plus_button, help_button) {
         this.points = [];
         this.canvas = canvas_element;
         this.canvas.style.background = '#99CCFF';
@@ -38,6 +38,16 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
                 grid.clear();
                 paper.view.draw();
             }
+        });
+        this.minus_button = minus_button;
+        this.minus_button.click(function (event){
+            if(this.canvas.width<=401) alert("Minimum size is attempt");
+            else this.canvas.width-=100;
+        });
+        this.plus_button = plus_button;
+        this.plus_button.click(function (event){
+            if(this.canvas.width>=1000) alert("Maxnimum size is attempt");
+            else this.canvas.width+=100;
         });
         
         this.help_button = help_button;
@@ -313,7 +323,17 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
             gridButton.attr('value', 0);
             gridButton.append("Grid On/Off");
             buttonDiv.append(gridButton);
+
+            // create size button
+            var minusButton = $('<button id="btn-minus"><i class="fa fa-minus"></i></button>');
+            var plusButton = $('<button id="btn-minus"><i class="fa fa-plus"></i></button>');
+            buttonDiv.append("<span>Size</span>");
+            buttonDiv.append(minusButton);
+            buttonDiv.append(plusButton);
+
             turtleArea.append(buttonDiv);
+
+            
 
             var canvasDiv = $('<div/>');
             turtleArea.append(canvasDiv);
@@ -326,7 +346,7 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
 
             canvasDiv.append(canvas);
             
-            this.turtledrawing = new TurtleDrawing(canvas, gridButton, helpButton);
+            this.turtledrawing = new TurtleDrawing(canvas, gridButton,minusButton,plusButton, helpButton);
             this.turtledrawing.points = this.model.get('points');
             
             this.$el.append(turtleArea);
