@@ -41,10 +41,11 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
         });
         this.minus_button = minus_button;
         this.minus_button.click(function (event){
+            console.log("canvas : ", this.canvas);
             if(this.canvas.width<=401) alert("Minimum size is attempt");
             else{
                 this.canvas.width -= 20;
-                this.canvas.height-= 20;
+                this.canvas.height-= 0;
                 this.canvas.resize;
             }
         });
@@ -52,6 +53,7 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
         this.plus_button.click(function (event){
             if(this.canvas.width>=1000) alert("Maxnimum size is attempt");
             else{
+                console.log("canvas : ", this.canvas);
                 this.canvas.width += 20;
                 this.canvas.height+= 20;
                 this.canvas.resize;
