@@ -42,12 +42,20 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
         this.minus_button = minus_button;
         this.minus_button.click(function (event){
             if(this.canvas.width<=401) alert("Minimum size is attempt");
-            else this.canvas.width-=100;
+            else{
+                this.canvas.width -= 20;
+                this.canvas.height-= 20;
+                this.canvas.resize;
+            }
         });
         this.plus_button = plus_button;
         this.plus_button.click(function (event){
             if(this.canvas.width>=1000) alert("Maxnimum size is attempt");
-            else this.canvas.width+=100;
+            else{
+                this.canvas.width += 20;
+                this.canvas.height+= 20;
+                this.canvas.resize;
+            }
         });
         
         this.help_button = help_button;
