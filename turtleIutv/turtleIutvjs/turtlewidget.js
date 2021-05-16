@@ -19,6 +19,7 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
                 var start = new paper.Point(1,1);
                 grid.moveTo(start);
                 var canvasSize = that.canvas.width;
+                console.log("canvas : ", that.canvas);
                 grid.lineTo(start.add([0,canvasSize]));
                 
                 var i;
@@ -51,6 +52,7 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
         });
         this.plus_button = plus_button;
         this.plus_button.click(function (event){
+            console.log("canvas : ", this.canvas);
             if(this.canvas.width>=1000) alert("Maxnimum size is attempt");
             else{
                 console.log("canvas : ", this.canvas);
