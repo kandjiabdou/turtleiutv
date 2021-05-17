@@ -1,6 +1,6 @@
 define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(paperlib, widget){
     
-    function TurtleDrawing(canvas_element, grid_button, minus_button,plus_button, help_button) {
+    function TurtleDrawing(canvas_element, grid_button,full_button, minus_button,plus_button, help_button) {
         this.points = [];
         this.canvas = canvas_element;
         this.canvas.style.background = '#99CCFF';
@@ -19,7 +19,6 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
                 var start = new paper.Point(1,1);
                 grid.moveTo(start);
                 var canvasSize = that.canvas.width;
-                console.log("canvas : ", that.canvas);
                 grid.lineTo(start.add([0,canvasSize]));
                 
                 var i;
@@ -40,31 +39,43 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
                 paper.view.draw();
             }
         });
+
+        this.full_button = full_button;
+        this.full_button.click(function (event){
+            var size = $(that.canvas).parent().width();
+            that.canvas.width = size;
+            that.canvas.height= size;
+        });
+        
+        //that.canvas.height = that.canvas.width;
+        
         this.minus_button = minus_button;
         this.minus_button.click(function (event){
-            console.log("canvas : ", this.canvas);
-            if(this.canvas.width<=401) alert("Minimum size is attempt");
+            if(that.canvas.width<=401) alert("Minimum size is attempt");
             else{
-                this.canvas.width -= 20;
-                this.canvas.height-= 0;
-                this.canvas.resize;
+                that.canvas.width -= 20;
+                that.canvas.height-= 20;
+                that.canvas.resize;
             }
         });
         this.plus_button = plus_button;
         this.plus_button.click(function (event){
-            console.log("canvas : ", this.canvas);
-            if(this.canvas.width>=1000) alert("Maxnimum size is attempt");
+            if(that.canvas.width>=601) alert("Maxnimum size is attempt");
             else{
-                console.log("canvas : ", this.canvas);
-                this.canvas.width += 20;
-                this.canvas.height+= 20;
-                this.canvas.resize;
+                that.canvas.width += 20;
+                that.canvas.height += 20;
+                that.canvas.resize;
             }
         });
         
         this.help_button = help_button;
         this.help_button.click(function (event){
             alert("example:\nfrom turtleIutv import *\ndrawing()\nforward(50)\n");
+        });
+
+        //
+        $( window ).resize(function() {
+            $( "#log" ).append( "<div>Handler for .resize() called.</div>" );
         });
         
         // some variable to play with still
@@ -303,7 +314,9 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
                 
                 if(that.newPen == 1){
                     that.path.add(new paper.Point(that.oldX, that.oldY));
+                    //if(turtleShow===1){
                     that.turtle.position = new paper.Point(that.oldX, that.oldY);
+                    //}
                     that.path.strokeColor = that.newColour;
                 }
             } else {
@@ -339,7 +352,9 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
             // create size button
             var minusButton = $('<button id="btn-minus"><i class="fa fa-minus"></i></button>');
             var plusButton = $('<button id="btn-minus"><i class="fa fa-plus"></i></button>');
+            var fullButton = $('<button id="btn-full">Full</button>');
             buttonDiv.append("<span>Size</span>");
+            buttonDiv.append(fullButton);
             buttonDiv.append(minusButton);
             buttonDiv.append(plusButton);
 
@@ -358,7 +373,7 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
 
             canvasDiv.append(canvas);
             
-            this.turtledrawing = new TurtleDrawing(canvas, gridButton,minusButton,plusButton, helpButton);
+            this.turtledrawing = new TurtleDrawing(canvas, gridButton,fullButton, minusButton, plusButton, helpButton);
             this.turtledrawing.points = this.model.get('points');
             
             this.$el.append(turtleArea);

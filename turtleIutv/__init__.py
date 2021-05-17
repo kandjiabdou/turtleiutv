@@ -102,22 +102,26 @@ class Turtle(widgets.DOMWidget):
         self.posY -= round(num * math.cos(math.radians(self.bearing)), 1)
 
         if self.posX < Turtle.OFFSET:
+            print(self._view_module)
             print("Déppasement X est plus petit que OFFSET(20)")
-            Turtle.OFFSET-=num
-            self.posX = Turtle.OFFSET
+            #Turtle.OFFSET-=num
+            #self.posX = Turtle.OFFSET
         if self.posY < Turtle.OFFSET:
+            print(self._view_module)
             print("Déppasement Y est plus petit que OFFSET(20)")
-            Turtle.OFFSET-=num
-            self.posY = Turtle.OFFSET
+            #Turtle.OFFSET-=num
+            #self.posY = Turtle.OFFSET
 
         if self.posX > Turtle.SIZE - Turtle.OFFSET:
+            print(self._view_module)
             print("Déppasement X est plus grand que la taille du canvas(400)")
-            Turtle.SIZE+=num
-            self.posX = Turtle.SIZE - Turtle.OFFSET
+            #Turtle.SIZE+=num
+            #self.posX = Turtle.SIZE - Turtle.OFFSET
         if self.posY > Turtle.SIZE - Turtle.OFFSET:
+            print(self._view_module)
             print("Déppasement Y est plus grand que la taille du canvas(400)")
-            Turtle.SIZE+=num
-            self.posY = Turtle.SIZE - Turtle.OFFSET
+            #Turtle.SIZE+=num
+            #self.posY = Turtle.SIZE - Turtle.OFFSET
 
         self.b_change = 0
         self._add_point()
