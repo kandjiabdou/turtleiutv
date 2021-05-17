@@ -3,4 +3,5 @@ build/
 dist/
 MANIFEST
 .ipynb_checkpoints
+turtleIutv.egg-info
 
