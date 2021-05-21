@@ -226,8 +226,8 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
             }
             //alert("changX: " + changX + " chanY: " + changY )
             if((changX<turtleSpeed) && that.changRot===0 && changX!==0){
-                
-                if ((changX<=2) && changRot===0 && changX!==0){
+                alert("changRot: " + that.changRot + " speed: " + turtleSpeed );
+                if ((changX<=2) && that.changRot===0 && changX!==0){
                     that.oldX=that.newX;
                     that.oldY=that.newY;
                 }
@@ -254,10 +254,9 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
             //	turtleSpeed=1;
                 
             //}
-            
+
             else if  (that.changRot!==0 && (Math.abs(changRot))<turtleSpeed){
-                turtleSpeed=1;
-                
+                turtleSpeed=1;s
             }
             //frameX *= turtleSpeed;
             //frameY *= turtleSpeed;

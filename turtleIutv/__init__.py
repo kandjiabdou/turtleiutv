@@ -1,6 +1,6 @@
 import os.path
 import math
-
+import sys
 from ipywidgets import widgets
 from notebook import nbextensions
 from traitlets import Unicode, List
@@ -22,7 +22,8 @@ class Turtle(widgets.DOMWidget):
 
     SIZE = 400
     OFFSET = 10
-    def __init__(self):
+    SCALE = 1
+    def __init__(self, size =400):
         '''Create a Turtle.
 
         Example::
@@ -32,6 +33,8 @@ class Turtle(widgets.DOMWidget):
         super(Turtle, self).__init__()
         install_js()
         display(self)
+        Turtle.SIZE=size
+        Turtle.SCALE= Turtle.SIZE/400
         self.pen = 1
         self.speedVar = 1
         self.color = "black"
@@ -98,28 +101,28 @@ class Turtle(widgets.DOMWidget):
             t.forward(100)
         '''
 
-        self.posX += round(num * math.sin(math.radians(self.bearing)), 1)
-        self.posY -= round(num * math.cos(math.radians(self.bearing)), 1)
+        self.posX += round(num * Turtle.SCALE * math.sin(math.radians(self.bearing)), 1)
+        self.posY -= round(num * Turtle.SCALE * math.cos(math.radians(self.bearing)), 1)
 
         if self.posX < Turtle.OFFSET:
-            print(self._view_module)
-            print("Déppasement X est plus petit que OFFSET(20)")
+            sys.exit("Déppasement X est plus petit que OFFSET(20)")
+            # print("Déppasement X est plus petit que OFFSET(20)")
             #Turtle.OFFSET-=num
             #self.posX = Turtle.OFFSET
         if self.posY < Turtle.OFFSET:
-            print(self._view_module)
-            print("Déppasement Y est plus petit que OFFSET(20)")
+            sys.exit("Déppasement Y est plus petit que OFFSET(20)")
+            # print("Déppasement Y est plus petit que OFFSET(20)")
             #Turtle.OFFSET-=num
             #self.posY = Turtle.OFFSET
 
         if self.posX > Turtle.SIZE - Turtle.OFFSET:
-            print(self._view_module)
-            print("Déppasement X est plus grand que la taille du canvas(400)")
+            sys.exit("Déppasement X est plus grand que la taille du canvas(400")
+            # print("Déppasement X est plus grand que la taille du canvas(400)")
             #Turtle.SIZE+=num
             #self.posX = Turtle.SIZE - Turtle.OFFSET
         if self.posY > Turtle.SIZE - Turtle.OFFSET:
-            print(self._view_module)
-            print("Déppasement Y est plus grand que la taille du canvas(400)")
+            sys.exit("Déppasement Y est plus grand que la taille du canvas(400")
+            # print("Déppasement Y est plus grand que la taille du canvas(400)")
             #Turtle.SIZE+=num
             #self.posY = Turtle.SIZE - Turtle.OFFSET
 
@@ -259,9 +262,9 @@ def drawing(size=400, turtle=False):
     """
     assert size>=400 and size<=1000, "La taille doit être compris entre 400 et 1000"
     global turtleTmp
-    turtleTmp = Turtle()
+    turtleTmp = Turtle(size)
     turtleTmp.speed(5)
-    turtleTmp.SIZE=size
+    print("la taille : ",turtleTmp.SIZE)
 
 def forward(n):
     '''Move the Turtle forward by n units.
