@@ -3,7 +3,7 @@ import math
 import sys
 from ipywidgets import widgets
 from notebook import nbextensions
-from traitlets import Unicode, List
+from traitlets import Unicode, List, Int, Bool
 from IPython.display import display
 
 __version__ = '0.4'
@@ -19,11 +19,15 @@ class Turtle(widgets.DOMWidget):
     # TODO: Make this an eventful list, so we're not transferring the whole
     # thing on every sync
     points = List(sync=True)
-
-    SIZE = 400
-    OFFSET = 10
+    canvasSize = Int(sync=True)
+    canvasElementSize = Int(sync=True)
+    turtleShow = Bool(sync=True)
+    # 
+    SIZE_C = 0
+    SIZE_E = 0
+    OFFSET = 20
     SCALE = 1
-    def __init__(self, size =400):
+    def __init__(self, ce, cs, t):
         '''Create a Turtle.
 
         Example::
@@ -31,10 +35,15 @@ class Turtle(widgets.DOMWidget):
             t = Turtle()
         '''
         super(Turtle, self).__init__()
+        self.canvasSize = cs
+        self.canvasElementSize = ce
+        self.turtleShow = t
         install_js()
         display(self)
-        Turtle.SIZE=size
-        Turtle.SCALE= Turtle.SIZE/400
+        Turtle.SIZE_C=cs
+        Turtle.SIZE_E=ce
+        Turtle.SCALE = ce/cs
+        
         self.pen = 1
         self.speedVar = 1
         self.color = "black"
@@ -103,7 +112,7 @@ class Turtle(widgets.DOMWidget):
 
         self.posX += round(num * Turtle.SCALE * math.sin(math.radians(self.bearing)), 1)
         self.posY -= round(num * Turtle.SCALE * math.cos(math.radians(self.bearing)), 1)
-
+        '''
         if self.posX < Turtle.OFFSET:
             sys.exit("Déppasement X est plus petit que OFFSET(20)")
             # print("Déppasement X est plus petit que OFFSET(20)")
@@ -115,17 +124,17 @@ class Turtle(widgets.DOMWidget):
             #Turtle.OFFSET-=num
             #self.posY = Turtle.OFFSET
 
-        if self.posX > Turtle.SIZE - Turtle.OFFSET:
+        if self.posX > Turtle.SIZE_C - Turtle.OFFSET:
             sys.exit("Déppasement X est plus grand que la taille du canvas(400")
             # print("Déppasement X est plus grand que la taille du canvas(400)")
             #Turtle.SIZE+=num
             #self.posX = Turtle.SIZE - Turtle.OFFSET
-        if self.posY > Turtle.SIZE - Turtle.OFFSET:
+        if self.posY > Turtle.SIZE_C - Turtle.OFFSET:
             sys.exit("Déppasement Y est plus grand que la taille du canvas(400")
             # print("Déppasement Y est plus grand que la taille du canvas(400)")
             #Turtle.SIZE+=num
             #self.posY = Turtle.SIZE - Turtle.OFFSET
-
+        '''
         self.b_change = 0
         self._add_point()
 
@@ -137,9 +146,10 @@ class Turtle(widgets.DOMWidget):
             t.backward(100)
         '''
         
-        self.posX -= round(num * math.sin(math.radians(self.bearing)), 1)
-        self.posY += round(num * math.cos(math.radians(self.bearing)), 1)
+        self.posX -= round(num * Turtle.SCALE * math.sin(math.radians(self.bearing)), 1)
+        self.posY += round(num * Turtle.SCALE * math.cos(math.radians(self.bearing)), 1)
 
+        '''
         if self.posX < Turtle.OFFSET:
             self.posX = Turtle.OFFSET
         if self.posY < Turtle.OFFSET:
@@ -149,7 +159,7 @@ class Turtle(widgets.DOMWidget):
             self.posX = Turtle.SIZE - Turtle.OFFSET
         if self.posY > Turtle.SIZE - Turtle.OFFSET:
             self.posY = Turtle.SIZE - Turtle.OFFSET
-
+        '''
         self.b_change = 0
         self._add_point()
 
@@ -196,13 +206,6 @@ class Turtle(widgets.DOMWidget):
                  b=self.b_change, s=self.speedVar)
         self.points = self.points + [p]
 
-    def _translateX(self):
-        for p in self.points:
-            print("--> Point : ",p)
-        for p in self.points:
-            p['x'] -= Turtle.OFFSET
-            print("--> Point : ",p)
-
     def circle(self, radius, extent=360):
         """Draw a circle, or part of a circle.
 
@@ -240,8 +243,8 @@ class Turtle(widgets.DOMWidget):
 
             t.home()
         '''
-        self.posX = 200
-        self.posY = 200
+        self.posX = self.canvasElementSize/2
+        self.posY = self.canvasElementSize/2
         if 90 < self.bearing <=270:
             self.b_change = - (self.bearing - 90)
         else:
@@ -252,19 +255,28 @@ class Turtle(widgets.DOMWidget):
 
 
 turtleTmp = None
-
-def drawing(size=400, turtle=False):
+def drawing(element_size=500, canvas_size = 1000, turtleShow=True):
     """Start a drawing
 
     Example::
 
     drawing()
     """
-    assert size>=400 and size<=1000, "La taille doit être compris entre 400 et 1000"
+    #assert size>=400 and size<=1000, "La taille doit être compris entre 400 et 1000"
     global turtleTmp
-    turtleTmp = Turtle(size)
-    turtleTmp.speed(5)
-    print("la taille : ",turtleTmp.SIZE)
+    turtleTmp = Turtle(element_size,canvas_size,turtleShow)
+    #turtleTmp.speed(5)
+    print("la taille Element : ",turtleTmp.SIZE_E)
+    print("la taille canvas : ",turtleTmp.SIZE_C)
+
+def home():
+    '''Move the Turtle to its home position.
+
+        Example::
+
+            home()
+        '''
+    turtleTmp.home()
 
 def forward(n):
     '''Move the Turtle forward by n units.

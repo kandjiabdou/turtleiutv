@@ -1,7 +1,10 @@
 define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(paperlib, widget){
-    
-    function TurtleDrawing(canvas_element, grid_button,full_button, minus_button,plus_button, help_button) {
+
+    function TurtleDrawing(canvas_element, canvasElementSize, canvasSize, turtleShow, grid_button, help_button) {
         this.points = [];
+        this.canvasSize = canvasSize;
+        this.canvasElementSize = canvasElementSize;
+        //this.scale = canvasElementSize<canvasElementSize ? canvasElementSize/canvasElementSize : canvasElementSize/canvasElementSize;
         this.canvas = canvas_element;
         this.canvas.style.background = '#99CCFF';
         paper.setup(this.canvas);
@@ -39,41 +42,23 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
                 paper.view.draw();
             }
         });
-
+        
+        //that.canvas.height = that.canvas.width;
+        /*
         this.full_button = full_button;
         this.full_button.click(function (event){
             var size = $(that.canvas).parent().width();
             that.canvas.width = size;
             that.canvas.height= size;
         });
+        */
         
-        //that.canvas.height = that.canvas.width;
-        
-        this.minus_button = minus_button;
-        this.minus_button.click(function (event){
-            if(that.canvas.width<=401) alert("Minimum size is attempt");
-            else{
-                that.canvas.width -= 20;
-                that.canvas.height-= 20;
-                that.canvas.resize;
-            }
-        });
-        this.plus_button = plus_button;
-        this.plus_button.click(function (event){
-            if(that.canvas.width>=601) alert("Maxnimum size is attempt");
-            else{
-                that.canvas.width += 20;
-                that.canvas.height += 20;
-                that.canvas.resize;
-            }
-        });
-        
+        // Show help information
         this.help_button = help_button;
         this.help_button.click(function (event){
             alert("example:\nfrom turtleIutv import *\ndrawing()\nforward(50)\n");
         });
 
-        //
         $( window ).resize(function() {
             $( "#log" ).append( "<div>Handler for .resize() called.</div>" );
         });
@@ -82,21 +67,21 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
         this.lineSize = 2;
         this.rotateSpeed = 1;
         this.turtleColour ='#006900' ;
-        this.turtleShow = 1;
+        this.turtleShow = turtleShow;
         
         // onFrame variables
         this.oldPen=1;
-        this.oldX = 200;
-        this.oldY = 200;
+        this.oldX = this.canvasElementSize/2;
+        this.oldY = this.canvasElementSize/2;
         this.oldRotation=0;
         this.oldColour="black";
         this.newPen=1;
-        this.newX=200; 
-        this.newY=200;
+        this.newX= this.canvasElementSize/2; 
+        this.newY= this.canvasElementSize/2;
         this.newRotation=0;
         this.newColour="black";
-        this.veryOldX = 200;
-        this.veryOldY = 200;
+        this.veryOldX = this.canvasElementSize/2;
+        this.veryOldY = this.canvasElementSize/2;
         this.turtleSpeed = 1;
 
         // counts each turtle command
@@ -126,6 +111,11 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
             this.newColour = this.points[count+1].lc;
             this.newX = this.points[count+1].x;
             this.newY = this.points[count+1].y;
+            //console.log("--- les noveaux cordoonées X : ",this.newX,", Y : ",this.newY)
+            //if(this.newX>this.canvasElementSize || this.newX>this.canvasElementSize || this.newX<0 || this.newX<0){
+                //alert("Warning ! Vous avez déppasez la taille du canvas");
+                //throw new Error("Manual Abort Script"); 
+            //}
             this.changRot = this.points[count+1].b;
             this.turtleSpeed = this.points[count+1].s;
             this.count++;
@@ -145,14 +135,18 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
 
         };
         
+
+        // Builds the initial turtle icon
+        // If turtleShow is 1 that mean true, turtle is displayed
+        // Otherwise a triangle shaped point is displayed instead.
         TurtleDrawing.prototype.draw_turtle = function() {
-            //builds the initial turtle icon
+            
             if(this.turtleShow===1){
                 var oldX = this.oldX;
                 var oldY = this.oldY;
                 var turtleColour = this.turtleColour;
 
-                var tail = new paper.Path.RegularPolygon(new paper.Point(oldX-11,oldY), 3, 3);
+                var tail = new paper.Path.RegularPolygon(new paper.Point(oldX-5,oldY), 3, 3);
                 tail.rotate(30);
                 tail.fillColor = turtleColour;
 
@@ -187,6 +181,16 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
                 circle6.fillColor = turtleColour;
 
                 this.turtle = new paper.Group([circle1,circle2,circle3,circle4,circle5,circle6,tail]);
+            }else{
+                var oldX = this.oldX;
+                var oldY = this.oldY;
+                var turtleColour = this.turtleColour;
+
+                var tail = new paper.Path.RegularPolygon(new paper.Point(oldX,oldY), 3, 8);
+                tail.rotate(-30);
+                tail.fillColor = turtleColour;
+
+                this.turtle = new paper.Group([tail]);
             }
         };
         this.draw_turtle();
@@ -226,7 +230,6 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
             }
             //alert("changX: " + changX + " chanY: " + changY )
             if((changX<turtleSpeed) && that.changRot===0 && changX!==0){
-                alert("changRot: " + that.changRot + " speed: " + turtleSpeed );
                 if ((changX<=2) && that.changRot===0 && changX!==0){
                     that.oldX=that.newX;
                     that.oldY=that.newY;
@@ -256,13 +259,13 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
             //}
 
             else if  (that.changRot!==0 && (Math.abs(changRot))<turtleSpeed){
-                turtleSpeed=1;s
+                turtleSpeed=1;
             }
             //frameX *= turtleSpeed;
             //frameY *= turtleSpeed;
 
             //rotate turtle, current is the exact centre of the turtle
-            if (changRot !== 0 && that.turtleShow===1){
+            if (changRot !== 0){
                 var current = new paper.Point(that.oldX, that.oldY);
                 
                 if(changRot < 0) {
@@ -281,41 +284,38 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
 
             if (that.newX > that.oldX) {
                 that.oldX += (frameX*turtleSpeed);
-                if(turtleShow===1){
+                //if(turtleShow===1){
                     that.turtle.translate((frameX*turtleSpeed),0);
-                }
+                //}
             }
             if (that.newY > that.oldY){
                 that.oldY += (frameY*turtleSpeed);
-                if(turtleShow===1){
+                //if(turtleShow===1){
                     that.turtle.translate(0,(frameY*turtleSpeed));
-                }
+                //}
             }
 
             if (that.newX < that.oldX){
                 that.oldX -= (frameX*turtleSpeed);
-                if(turtleShow===1){
+                //if(turtleShow===1){
                     that.turtle.translate((-frameX*turtleSpeed),0);
-                }
+                //}
             }
 
             if (that.newY < that.oldY){
                 that.oldY -= (frameY*turtleSpeed);
-                if(turtleShow===1){
+                //if(turtleShow===1){
                     that.turtle.translate(0,(-frameY*turtleSpeed));
-                }
+                //}
             }
             
             // prints the little circles every frame until we reach the correct point
             // to create the line
             //alert(" ("+ newY+ ")  "+ oldY+ "  where brooklyn at " +" ("+ newX+ ")  "+ oldX + " speed:"+ turtleSpeed + " changRot:" + changRot);
             if (that.newY !== that.oldY || that.newX !== that.oldX || that.changRot !== 0){
-                
                 if(that.newPen == 1){
                     that.path.add(new paper.Point(that.oldX, that.oldY));
-                    //if(turtleShow===1){
                     that.turtle.position = new paper.Point(that.oldX, that.oldY);
-                    //}
                     that.path.strokeColor = that.newColour;
                 }
             } else {
@@ -347,32 +347,23 @@ define(['nbextensions/turtleIutvjs/paper', "@jupyter-widgets/base"], function(pa
             gridButton.attr('value', 0);
             gridButton.append("Grid On/Off");
             buttonDiv.append(gridButton);
-
-            // create size button
-            var minusButton = $('<button id="btn-minus"><i class="fa fa-minus"></i></button>');
-            var plusButton = $('<button id="btn-minus"><i class="fa fa-plus"></i></button>');
-            var fullButton = $('<button id="btn-full">Full</button>');
-            buttonDiv.append("<span>Size</span>");
-            buttonDiv.append(fullButton);
-            buttonDiv.append(minusButton);
-            buttonDiv.append(plusButton);
-
             turtleArea.append(buttonDiv);
 
-            
-
+            var canvasSize = this.model.get('canvasSize');
+            var canvasElementSize = this.model.get('canvasElementSize');
+            var turtleShow = this.model.get('turtleShow') ? 1 : 0;
             var canvasDiv = $('<div/>');
             turtleArea.append(canvasDiv);
             
             var canvas = document.createElement('canvas');
             canvas.id     = "canvas1";
-            canvas.width  = 401;
-            canvas.height = 401;
+            canvas.width  = canvasElementSize
+            canvas.height = canvasElementSize
             canvas.resize;
 
             canvasDiv.append(canvas);
             
-            this.turtledrawing = new TurtleDrawing(canvas, gridButton,fullButton, minusButton, plusButton, helpButton);
+            this.turtledrawing = new TurtleDrawing(canvas,canvasElementSize, canvasSize, turtleShow, gridButton, helpButton);
             this.turtledrawing.points = this.model.get('points');
             
             this.$el.append(turtleArea);
