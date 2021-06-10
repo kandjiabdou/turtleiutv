@@ -6,7 +6,7 @@ from notebook import nbextensions
 from traitlets import Unicode, List, Int, Bool
 from IPython.display import display
 
-__version__ = '0.4'
+__version__ = '0.8'
 
 def install_js():
     pkgdir = os.path.dirname(__file__)
@@ -19,6 +19,7 @@ class Turtle(widgets.DOMWidget):
     # TODO: Make this an eventful list, so we're not transferring the whole
     # thing on every sync
     points = List(sync=True)
+    actions = List(sync=True)
     canvasSize = Int(sync=True)
     canvasElementSize = Int(sync=True)
     turtleShow = Bool(sync=True)
@@ -49,6 +50,7 @@ class Turtle(widgets.DOMWidget):
         self.color = "black"
         self.bearing = 90
         self.points = []
+        self.actions = []
         self.home()
 
     def pendown(self):
@@ -58,6 +60,8 @@ class Turtle(widgets.DOMWidget):
 
             t.pendown()
         '''
+        a = dict(type="penMove",value=True)
+        self.actions = self.actions + [a]
         self.pen = 1
 
     def penup(self):
@@ -67,6 +71,8 @@ class Turtle(widgets.DOMWidget):
 
             t.penup()
         '''
+        a = dict(type="penMove",value=False)
+        self.actions = self.actions + [a]
         self.pen = 0
 
     def speed(self, speed):
@@ -76,6 +82,8 @@ class Turtle(widgets.DOMWidget):
 
             t.speed(10) # Full speed
         '''
+        a = dict(type="speed",value=min(max(1, speed), 50))
+        self.actions = self.actions + [a]
         self.speedVar = min(max(1, speed), 10)
 
     def right(self, num):
@@ -85,10 +93,13 @@ class Turtle(widgets.DOMWidget):
 
             t.right(90)
         '''
+        
         self.bearing += num
         self.bearing = self.bearing%360
         self.b_change = num
-        self._add_point()
+
+        a = dict(type="rotation",value=num,sense=1)
+        self.actions = self.actions + [a]
 
     def left(self, num):
         '''Turn the Turtle num degrees to the left.
@@ -100,7 +111,9 @@ class Turtle(widgets.DOMWidget):
         self.bearing -= num
         self.bearing = self.bearing%360
         self.b_change = -num
-        self._add_point()
+
+        a = dict(type="rotation",value=num,sense=-1)
+        self.actions = self.actions + [a]
 
     def forward(self, num):
         '''Move the Turtle forward by num units.
@@ -109,34 +122,13 @@ class Turtle(widgets.DOMWidget):
 
             t.forward(100)
         '''
-
         self.posX += round(num * Turtle.SCALE * math.sin(math.radians(self.bearing)), 1)
         self.posY -= round(num * Turtle.SCALE * math.cos(math.radians(self.bearing)), 1)
-        '''
-        if self.posX < Turtle.OFFSET:
-            sys.exit("Déppasement X est plus petit que OFFSET(20)")
-            # print("Déppasement X est plus petit que OFFSET(20)")
-            #Turtle.OFFSET-=num
-            #self.posX = Turtle.OFFSET
-        if self.posY < Turtle.OFFSET:
-            sys.exit("Déppasement Y est plus petit que OFFSET(20)")
-            # print("Déppasement Y est plus petit que OFFSET(20)")
-            #Turtle.OFFSET-=num
-            #self.posY = Turtle.OFFSET
-
-        if self.posX > Turtle.SIZE_C - Turtle.OFFSET:
-            sys.exit("Déppasement X est plus grand que la taille du canvas(400")
-            # print("Déppasement X est plus grand que la taille du canvas(400)")
-            #Turtle.SIZE+=num
-            #self.posX = Turtle.SIZE - Turtle.OFFSET
-        if self.posY > Turtle.SIZE_C - Turtle.OFFSET:
-            sys.exit("Déppasement Y est plus grand que la taille du canvas(400")
-            # print("Déppasement Y est plus grand que la taille du canvas(400)")
-            #Turtle.SIZE+=num
-            #self.posY = Turtle.SIZE - Turtle.OFFSET
-        '''
+        
         self.b_change = 0
-        self._add_point()
+
+        a = dict(type="shifting",point= dict(x=self.posX, y=self.posY))
+        self.actions = self.actions + [a]
 
     def backward(self, num):
         '''Move the Turtle backward by num units.
@@ -149,19 +141,9 @@ class Turtle(widgets.DOMWidget):
         self.posX -= round(num * Turtle.SCALE * math.sin(math.radians(self.bearing)), 1)
         self.posY += round(num * Turtle.SCALE * math.cos(math.radians(self.bearing)), 1)
 
-        '''
-        if self.posX < Turtle.OFFSET:
-            self.posX = Turtle.OFFSET
-        if self.posY < Turtle.OFFSET:
-            self.posY = Turtle.OFFSET
-
-        if self.posX > Turtle.SIZE - Turtle.OFFSET:
-            self.posX = Turtle.SIZE - Turtle.OFFSET
-        if self.posY > Turtle.SIZE - Turtle.OFFSET:
-            self.posY = Turtle.SIZE - Turtle.OFFSET
-        '''
         self.b_change = 0
-        self._add_point()
+        a = dict(type="shifting",point= dict(x=self.posX, y=self.posY))
+        self.actions = self.actions + [a]
 
     def pencolor(self, color):
         '''Change the color of the pen to color. Default is black.
@@ -170,6 +152,9 @@ class Turtle(widgets.DOMWidget):
 
             t.pencolor("red")
         '''
+        a = dict(type="pencolor",value= color)
+        self.actions = self.actions + [a]
+
         self.color = color
 
     def setposition(self, x, y, bearing=None):
@@ -179,14 +164,16 @@ class Turtle(widgets.DOMWidget):
 
             t.setposition(100, 100)
         """
-        self.posX = x
-        self.posY = y
         if bearing is None:
-            self._add_point()
+            self.posX = x
+            self.posY = y
+            a = dict(type="shifting",point= dict(x=x, y=y))
+            self.actions = self.actions + [a]
         elif isinstance(bearing, int):
             self.setbearing(bearing)
         else:
             raise ValueError("Bearing must be an integer")
+        
 
     def setbearing(self, bearing):
         """Change the bearing (angle) of the turtle.
@@ -198,13 +185,8 @@ class Turtle(widgets.DOMWidget):
         diff = self.bearing - bearing
         self.b_change = diff
         self.bearing = bearing
-        self._add_point()
         self.b_change = 0
 
-    def _add_point(self):
-        p = dict(p=self.pen, lc=self.color, x=self.posX, y=self.posY,
-                 b=self.b_change, s=self.speedVar)
-        self.points = self.points + [p]
 
     def circle(self, radius, extent=360):
         """Draw a circle, or part of a circle.
@@ -217,8 +199,9 @@ class Turtle(widgets.DOMWidget):
 
             t.circle(50)
         """
+        
         temp = self.bearing
-        self.b_change = 0;
+        self.b_change = 0
         tempSpeed = self.speedVar
         self.speedVar = 1
 
@@ -250,7 +233,6 @@ class Turtle(widgets.DOMWidget):
         else:
             self.b_change = 90 - self.bearing
         self.bearing = 90
-        self._add_point()
 
 
 
@@ -266,8 +248,8 @@ def drawing(element_size=500, canvas_size = 1000, turtleShow=True):
     global turtleTmp
     turtleTmp = Turtle(element_size,canvas_size,turtleShow)
     #turtleTmp.speed(5)
-    print("la taille Element : ",turtleTmp.SIZE_E)
-    print("la taille canvas : ",turtleTmp.SIZE_C)
+    #print("la taille Element : ",turtleTmp.SIZE_E)
+    #print("la taille canvas : ",turtleTmp.SIZE_C)
 
 def home():
     '''Move the Turtle to its home position.

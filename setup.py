@@ -4,7 +4,7 @@ with open("README.rst", "r") as f:
     readme = f.read()
 
 setup(name='turtleIutv',
-      version='0.6',
+      version='0.8',
       description='Turtles in the Jupyter Notebook',
       long_description = readme,
       author='Mathieu Lacroix',
