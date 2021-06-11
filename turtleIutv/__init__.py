@@ -150,7 +150,7 @@ class Turtle(widgets.DOMWidget):
 
         Example::
 
-            t.pencolor("red")
+            t.penColor("red")
         '''
         a = dict(type="penColor",value= color)
         self.actions = self.actions + [a]
@@ -161,7 +161,7 @@ class Turtle(widgets.DOMWidget):
 
         Example::
 
-            t.pencolor(5)
+            t.penSize(5)
         '''
         a = dict(type="penSize",value= size)
         self.actions = self.actions + [a]
