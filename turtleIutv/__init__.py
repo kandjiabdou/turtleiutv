@@ -51,8 +51,8 @@ class Turtle(widgets.DOMWidget):
         self.bearing = 90
         self.points = []
         self.actions = []
-        self.home()
-
+        self.posX = self.canvasElementSize/2
+        self.posY = self.canvasElementSize/2
     def pendown(self):
         '''Put down the pen. Turtles start with their pen down.
 
@@ -60,7 +60,7 @@ class Turtle(widgets.DOMWidget):
 
             t.pendown()
         '''
-        a = dict(type="penMove",value=True)
+        a = dict(type="pen",value=True)
         self.actions = self.actions + [a]
         self.pen = 1
 
@@ -71,7 +71,7 @@ class Turtle(widgets.DOMWidget):
 
             t.penup()
         '''
-        a = dict(type="penMove",value=False)
+        a = dict(type="pen",value=False)
         self.actions = self.actions + [a]
         self.pen = 0
 
@@ -145,17 +145,27 @@ class Turtle(widgets.DOMWidget):
         a = dict(type="shifting",point= dict(x=self.posX, y=self.posY))
         self.actions = self.actions + [a]
 
-    def pencolor(self, color):
+    def penColor(self, color):
         '''Change the color of the pen to color. Default is black.
 
         Example::
 
             t.pencolor("red")
         '''
-        a = dict(type="pencolor",value= color)
+        a = dict(type="penColor",value= color)
         self.actions = self.actions + [a]
-
         self.color = color
+
+    def penSize(self, size):
+        '''Change the size of the pen to size. Default is 3.
+
+        Example::
+
+            t.pencolor(5)
+        '''
+        a = dict(type="penSize",value= size)
+        self.actions = self.actions + [a]
+        self.size = size
 
     def setposition(self, x, y, bearing=None):
         """Change the position of the turtle.
@@ -228,6 +238,8 @@ class Turtle(widgets.DOMWidget):
         '''
         self.posX = self.canvasElementSize/2
         self.posY = self.canvasElementSize/2
+        a = dict(type="shifting",point= dict(x=self.posX, y=self.posY))
+        self.actions = self.actions + [a]
         if 90 < self.bearing <=270:
             self.b_change = - (self.bearing - 90)
         else:
@@ -345,4 +357,11 @@ def setColor(color):
 
             setColor("red")
     """
-    turtleTmp.pencolor(color)
+    turtleTmp.penColor(color)
+def setSize(size):
+    """Change the size of the pen.
+        Example::
+
+            setSize(5)
+    """
+    turtleTmp.penSize(size)

@@ -11,19 +11,9 @@ define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbexten
         $( window ).resize(function() {
             $( "#log" ).append( "<div>Handler for .resize() called.</div>" );
         });
-        
-        // some variable to play with still
-        this.rotateSpeed = 1;
-        this.turtleColour ='#006900' ;
-        this.turtleShow = turtleShow;
-        
-        // onFrame variables
-        this.pen=1;
+
         this.x = this.canvasElementSize/2;
         this.y = this.canvasElementSize/2;
-        this.rotation=0;
-        this.colour="black";
-        this.turtleSpeed = 1;
 
         //######################################################################################################
         var that = this;
@@ -51,20 +41,16 @@ define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbexten
                         console.log(drawer.actions);
                         break;
                     case "penColor":
-                        //
-                        drawer.actionCount++;
-                        console.log(drawer.actions);
-
+                        drawer.changePenColor();
                         break;
-                    case "penMove":
+                    case "penSize":
+                        drawer.changePenSize();
+                        break;
+                    case "pen":
                         drawer.doPenMove();
-                        console.log(drawer.actions);
                         break;
                     default:
                         drawer.actionCount++;
-                        console.log(drawer.actions);
-
-                        console.log("No action");
                 }
             }
         });
