@@ -1,3 +1,29 @@
+/**
+ * Class Drawer
+ * This class is used to manage the actions
+ * to be performed to draw and make animations.
+ * 
+ * The attributes of the class
+ * @param {Array<Object>} actions - Action table to perform, the possible types of actions are: shifting, rotation, speed, pen, penColor, penSize
+ * @param {Path} path - Path containing the points to be drawn
+ * @param {Boolean} penMove - If this value is TRUE a displacement is drawn, otherwise the stylus is raised and no segment is drawn.
+ * @param {Double} dx - Variation of a displacement on the x-axis
+ * @param {Double} dy - Variation of a displacement on the y-axis
+ * @param {Double} x - Current pen or turtle position on the x-axis
+ * @param {Double} y - Current pen or turtle position on the y-axis
+ * @param {Int} actionCount - Number indicating the position of the current action in the @actions array
+ * @param {Groupe} arrow - Arrow or turtle in green color indicating the route
+ * @param {Point} arrivalPoint - The point to be reached by drawing the @currentSegment
+ * @param {Point} lastPoint - The start point of the @currentSegment , so it is the last point attains
+ * @param {Segment} currentSegment - Current segment to be traced during the animation
+ */
+
+/** Construtor
+ * Create an instance of the class
+ * @param {Point} start - Start point of the @path
+ * @param {Array<Object>} actions - Action table to perform
+ * @return {Drawer(Object)} - new Drawer(start,actions)
+ */
 function Drawer(start,actions) {
     this.actions = actions;
     this.path = new paper.Path();
@@ -13,8 +39,7 @@ function Drawer(start,actions) {
     this.x = start.x;
     this.y = start.y;
     this.actionCount = 0;
-    
-    // Arrow or turtle which shows the path which is drawn
+
     this.arrow = new paper.Path.RegularPolygon(new paper.Point(this.x,this.y), 3, 8);
     this.arrow.rotate(-30);
     this.arrow.fillColor = "green";
@@ -23,10 +48,16 @@ function Drawer(start,actions) {
     this.lastPoint = new paper.Point(this.x, this.y); // last Point is the last point placed
     this.currentSegment = this.getCurrentSegment(); // currentSegment is the current segment to be plotted
 }
+
+/**
+ * Animates a movement of a segment
+ * The @arrivalPoint is not known at the start of plotting of a segment,
+ * it must be initialized before using it, and variations also (@dx and @dy )
+ * When @drawCurrentSegment_ if the @currentSegment is done and @penMove , add a new Point to prepare next @currentSegment
+ * @return {nothing}
+ */
 Drawer.prototype.doDeplacement = function() {
-    //Animates a movement of a segment
     var currentAction = this.getCurrentAction();
-    // the arrival point is not known at the start of plotting of a segment, it must be initialized before using it
     if(this.arrivalPoint===undefined){
         this.arrivalPoint = new paper.Point(currentAction.point.x,currentAction.point.y);
         this.dx=this.getDx();
@@ -40,14 +71,16 @@ Drawer.prototype.doDeplacement = function() {
             this.currentSegment = this.getCurrentSegment();
             this.arrivalPoint = undefined;
         }
-        // next action
         this.actionCount++;
-
     }else {
-        // Drawing current segment
         this.drawCurrentSegment();
     }
 };
+
+/**
+ * Rotate turtle or arrow at an angle @currentAction_value in an @sense direction
+ * @return {nothing}
+ */
 Drawer.prototype.doRotation = function(){
     var currentAction = this.getCurrentAction();
     if(currentAction.value < this.speed){
@@ -59,17 +92,24 @@ Drawer.prototype.doRotation = function(){
         currentAction.value-=this.speed;
     }
 };
+
+/**
+ * Add a variation (@dx and @dy ) to the @currentSegment to make the animation and a translation of the @arrow, until it reaches the @arrivalPoint
+ * @return {nothing}
+ */
 Drawer.prototype.drawCurrentSegment = function() {
-    // add a variation to the current segment to make the animation and a translation of the arrow
     if(this.penMove){
         this.currentSegment.x += this.dx;
         this.currentSegment.y += this.dy;
     }
-    
     this.arrow.translate(this.dx,this.dy);
     this.x = this.arrow.position.x;
     this.y = this.arrow.position.y;
 };
+/**
+ * Change pen if the tracing should be done or not
+ * @return {nothing}
+ */
 Drawer.prototype.doPenMove = function(){
     var currentAction = this.getCurrentAction();
     if(currentAction.value!=this.penMove){
@@ -84,6 +124,11 @@ Drawer.prototype.doPenMove = function(){
     }
     this.actionCount++;
 };
+
+/**
+ * Change pen color if the new color of the @currentAction is different to @path color
+ * @return {nothing}
+ */
 Drawer.prototype.changePenColor = function(){
     var currentAction = this.getCurrentAction();
     if(this.path.strokeColor != currentAction.value){
@@ -92,6 +137,11 @@ Drawer.prototype.changePenColor = function(){
     }
     this.actionCount++;
 };
+
+/**
+ * Change pen size if the new size of the @currentAction is different to @path size
+ * @return {nothing}
+ */
 Drawer.prototype.changePenSize = function(){
     var currentAction = this.getCurrentAction();
     if(this.path.strokeWidth != currentAction.value){
@@ -100,6 +150,14 @@ Drawer.prototype.changePenSize = function(){
     }
     this.actionCount++;
 };
+
+/**
+ * Reinitialize the @path
+ * Then update variables @arrivalPoint , @lastPoint  and @currentSegment
+ * @param {Color} color - The new color of the @path
+ * @param {Int} size - The new size of the @path
+ * @return {nothing}
+ */
 Drawer.prototype.updatePath = function(color,size){
     var start = new paper.Point(this.x,this.y);
     this.path = new paper.Path();
@@ -111,12 +169,22 @@ Drawer.prototype.updatePath = function(color,size){
     this.lastPoint = new paper.Point(this.x, this.y); // last Point is the last point placed
     this.currentSegment = this.getCurrentSegment();
 };
-Drawer.prototype.isFinish = function() {
+
+/**
+ * Returns TRUE if the actions to be processed are completed, else False
+ * @return {Boolean}
+ */
+Drawer.prototype.isDrawingFinished = function() {
     return !(this.actionCount <= this.actions.length-1);
 };
+
+/**
+ * Returns TRUE if the @currentSegment to be traced has reached the @arrivalPoint
+ * If the variation to be added is greater than the remaining distance
+ * We stop and add the end that remains and retrun true, otherwise the end point will be overwritten
+ * @return {Boolean}
+ */
 Drawer.prototype.isPointReached = function() {
-    // If the variation to be added is greater than the remaining distance
-    // We stop and add the end that remains, otherwise the end point will be overwritten
     if(Math.abs(this.arrivalPoint.x-this.x)< Math.abs(this.dx) || Math.abs(this.arrivalPoint.y-this.y)< Math.abs(this.dy) ){
         this.arrow.translate(this.arrivalPoint.x-this.x,this.arrivalPoint.y-this.y);
         if(this.penMove){
@@ -129,18 +197,35 @@ Drawer.prototype.isPointReached = function() {
     }
     return false;
 };
+
+/**
+ * Returns @currentSegment to be traced
+ * @return {Point}
+ */
 Drawer.prototype.getCurrentSegment = function() {
     return this.path.segments[this.path.segments.length-1].point;
 };
-Drawer.prototype.getCurrentSegment  = function() {
-    return this.path.segments[this.path.segments.length-1].point;
-};
+
+/**
+ * Returns current action to be performed
+ * @return {Object}
+ */
 Drawer.prototype.getCurrentAction = function (){ // return the current action
     return this.actions[this.actionCount];
 };
+
+/**
+ * Returns the variation of a displacement on the x-axis
+ * @return {Double}
+ */
 Drawer.prototype.getDx = function (){ // return the current action
     return (this.arrivalPoint.x - this.lastPoint.x)*this.speed/this.arrivalPoint.getDistance(this.lastPoint);
 };
+
+/**
+ * Returns the variation of a displacement on the y-axis
+ * @return {Double}
+ */
 Drawer.prototype.getDy = function (){ // return the current action
     return (this.arrivalPoint.y - this.lastPoint.y)*this.speed/(this.arrivalPoint.getDistance(this.lastPoint));
 };

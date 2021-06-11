@@ -1,4 +1,4 @@
-define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbextensions/turtleIutvjs/drawer'], function(paperlib, widget,drawer){
+define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbextensions/turtleIutvjs/drawer'], function(paperlib, widget){
 
     function TurtleDrawing(canvas_element, canvasElementSize, canvasSize, turtleShow, grid_button, help_button) {
         this.actions = [];
@@ -6,27 +6,24 @@ define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbexten
         this.canvasElementSize = canvasElementSize;
         this.canvas = canvas_element;
         this.canvas.style.background = '#99CCFF';
+        this.x = this.canvasElementSize/2;
+        this.y = this.canvasElementSize/2;
         paper.setup(this.canvas);
 
         $( window ).resize(function() {
             $( "#log" ).append( "<div>Handler for .resize() called.</div>" );
         });
 
-        this.x = this.canvasElementSize/2;
-        this.y = this.canvasElementSize/2;
-
         //######################################################################################################
         var that = this;
         console.log("Starting ....");
-        // some
         var start = new paper.Point(this.x,this.y);
         var drawer = new Drawer(start,this.actions);
 
-        // Loop, doit parcourrir chaque nouveau point, l'ajouter sur le path et le tracer
+        // Loop, must go through each new action and make an animation if necessary
         paper.view.on('frame', function(event) {
-            // draw a segment
             drawer.actions = that.actions;
-            if(!drawer.isFinish()){
+            if(!drawer.isDrawingFinished()){
                 var currentAction = drawer.getCurrentAction();
                 switch(currentAction.type){
                     case "shifting":
@@ -37,7 +34,8 @@ define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbexten
                         break;
                     case "speed":
                         drawer.speed = currentAction.value;
-                        drawer.actionCount++;
+                        drawer
+                        .actionCount++;
                         console.log(drawer.actions);
                         break;
                     case "penColor":
