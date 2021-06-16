@@ -130,7 +130,6 @@ Drawer.prototype.doRotation = function(){
         this.turtle.rotate(currentAction.value*currentAction.sense);
         this.actionCount++;
     }else{// do rotation
-        console.log(currentAction.value);
         this.turtle.rotate(this.speed*currentAction.sense);
         currentAction.value-=this.speed;
     }
