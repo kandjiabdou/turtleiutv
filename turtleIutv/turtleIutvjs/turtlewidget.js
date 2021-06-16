@@ -1,6 +1,6 @@
 define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbextensions/turtleIutvjs/drawer'], function(paperlib, widget){
 
-    function TurtleDrawing(canvas_element, canvasElementSize, canvasSize, turtleShow, grid_button, help_button) {
+    function TurtleDrawing(canvas_element, canvasElementSize, canvasSize, grid_button, help_button) {
         this.actions = [];
         this.canvasSize = canvasSize;
         this.canvasElementSize = canvasElementSize;
@@ -13,9 +13,47 @@ define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbexten
         $( window ).resize(function() {
             $( "#log" ).append( "<div>Handler for .resize() called.</div>" );
         });
+        /* adds grid for user to turn off / on, helps see what the turtle is doing */
+        this.grid = new paper.Path();
+        this.grid_on = false;
+        this.grid_button = grid_button;
+        var scale = 20*canvasElementSize/canvasSize;
+        var that = this;
+        this.grid_button.click(function (){
+            var grid = that.grid;
+            if (!that.grid_on) {
+                that.grid_on = true;
+                grid.strokeColor = 'grey';
+                var start = new paper.Point(1,1);
+                grid.moveTo(start);
+                var canvasSize = that.canvas.width;
+                grid.lineTo(start.add([0,canvasSize]));
+                
+                var i;
+                for(i = scale; i <= canvasSize; i += scale){
+                    grid.lineTo(start.add([i,canvasSize]));
+                    grid.lineTo(start.add([i,0]));
+                    grid.lineTo(start.add([i+scale,0]));
+                }
+                for(i = scale; i <= canvasSize; i += scale){
+                    grid.lineTo(start.add([canvasSize,i]));
+                    grid.lineTo(start.add([0,i]));
+                    grid.lineTo(start.add([0,i+scale]));
+                }
+                paper.view.draw();
+            } else {
+                that.grid_on = false;
+                grid.clear();
+                paper.view.draw();
+            }
+        });
+        
+        this.help_button = help_button;
+        this.help_button.click(function (event){
+            alert("example:\nfrom turtleIutv import *\ndrawing()\nforward(50)\n");
+        });
 
         //######################################################################################################
-        var that = this;
         console.log("Starting ....");
         var start = new paper.Point(this.x,this.y);
         var drawer = new Drawer(start,this.actions);
@@ -36,7 +74,6 @@ define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbexten
                         drawer.speed = currentAction.value;
                         drawer
                         .actionCount++;
-                        console.log(drawer.actions);
                         break;
                     case "penColor":
                         drawer.changePenColor();
@@ -66,11 +103,6 @@ define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbexten
 
             var buttonDiv = $('<div/>');
             buttonDiv.attr('target','button-area');
-
-            // create help button 
-            var helpButton = $('<button/>');
-            helpButton.append("Help!");
-            buttonDiv.append(helpButton);
             
             // create grid button  
             var gridButton = $('<button/>');
@@ -79,6 +111,10 @@ define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbexten
             gridButton.append("Grid On/Off");
             buttonDiv.append(gridButton);
             turtleArea.append(buttonDiv);
+            // create help button 
+            var helpButton = $('<button/>');
+            helpButton.append("Help!");
+            buttonDiv.append(helpButton);
 
             var canvasSize = this.model.get('canvasSize');
             var canvasElementSize = this.model.get('canvasElementSize');
@@ -94,7 +130,7 @@ define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbexten
 
             canvasDiv.append(canvas);
             
-            this.turtledrawing = new TurtleDrawing(canvas,canvasElementSize, canvasSize, turtleShow, gridButton, helpButton);
+            this.turtledrawing = new TurtleDrawing(canvas,canvasElementSize, canvasSize, gridButton, helpButton);
             this.turtledrawing.actions = this.model.get('actions');
             
             this.$el.append(turtleArea);

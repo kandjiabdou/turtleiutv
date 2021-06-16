@@ -12,7 +12,8 @@
  * @param {Double} x - Current pen or turtle position on the x-axis
  * @param {Double} y - Current pen or turtle position on the y-axis
  * @param {Int} actionCount - Number indicating the position of the current action in the @actions array
- * @param {Groupe} arrow - Arrow or turtle in green color indicating the route
+ * @param {Color} turtleColour - Color of the @turtle 
+ * @param {Groupe} turtle - Turtle in green color indicating the route
  * @param {Point} arrivalPoint - The point to be reached by drawing the @currentSegment
  * @param {Point} lastPoint - The start point of the @currentSegment , so it is the last point attains
  * @param {Segment} currentSegment - Current segment to be traced during the animation
@@ -40,14 +41,56 @@ function Drawer(start,actions) {
     this.y = start.y;
     this.actionCount = 0;
 
-    this.arrow = new paper.Path.RegularPolygon(new paper.Point(this.x,this.y), 3, 8);
-    this.arrow.rotate(-30);
-    this.arrow.fillColor = "green";
+    this.turtleColour = "green";
+    this.turtle = this.draw_turtle();
 
     this.arrivalPoint = undefined;
     this.lastPoint = new paper.Point(this.x, this.y); // last Point is the last point placed
     this.currentSegment = this.getCurrentSegment(); // currentSegment is the current segment to be plotted
-}
+    
+};
+
+/**
+ * Initialize the @turtle and return it as a paper.Groupe
+ * @return {paper.Group}
+ */
+Drawer.prototype.draw_turtle = function() {
+
+    var tail = new paper.Path.RegularPolygon(new paper.Point(this.x-11,this.y), 3, 3);
+    tail.rotate(30);
+    tail.fillColor = this.turtleColour;
+    var circlePoint = new paper.Point(this.x, this.y);
+
+    var circle1 = new paper.Path.Circle(circlePoint, 10);
+    circle1.fillColor = this.turtleColour;
+
+    circlePoint = new paper.Point(this.x+7, this.y-10);
+
+    var circle2 = new paper.Path.Circle(circlePoint, 3);
+    circle2.fillColor = this.turtleColour;
+
+    circlePoint = new paper.Point(this.x-7, this.y+10);
+
+    var circle3 = new paper.Path.Circle(circlePoint, 3);
+    circle3.fillColor = this.turtleColour;
+
+    circlePoint = new paper.Point(this.x+7, this.y+10);
+
+    var circle4 = new paper.Path.Circle(circlePoint, 3);
+    circle4.fillColor = this.turtleColour;
+
+    circlePoint = new paper.Point(this.x-7, this.y-10);
+
+    var circle5 = new paper.Path.Circle(circlePoint, 3);
+    circle5.fillColor = this.turtleColour;
+
+    circlePoint = new paper.Point(this.x+10, this.y);
+
+    var circle6 = new paper.Path.Circle(circlePoint, 5);
+    circle6.fillColor = this.turtleColour;
+
+    return  new paper.Group([circle1,circle2,circle3,circle4,circle5,circle6,tail]);
+};
 
 /**
  * Animates a movement of a segment
@@ -64,7 +107,6 @@ Drawer.prototype.doDeplacement = function() {
         this.dy=this.getDy();
     }
     if(this.isPointReached()){
-        console.log("Point reached");
         if(this.penMove){
             this.path.add(new paper.Point(currentAction.point.x,currentAction.point.y));
             this.lastPoint = new paper.Point(currentAction.point.x,currentAction.point.y);
@@ -78,23 +120,24 @@ Drawer.prototype.doDeplacement = function() {
 };
 
 /**
- * Rotate turtle or arrow at an angle @currentAction_value in an @sense direction
+ * Rotate turtle at an angle @currentAction_value in an @sense direction
  * @return {nothing}
  */
 Drawer.prototype.doRotation = function(){
     var currentAction = this.getCurrentAction();
-    if(currentAction.value < this.speed){
+    if(currentAction.value <= this.speed){
         // Finish rotation
-        this.arrow.rotate(currentAction.value*currentAction.sense);
+        this.turtle.rotate(currentAction.value*currentAction.sense);
         this.actionCount++;
     }else{// do rotation
-        this.arrow.rotate(this.speed*currentAction.sense);
+        console.log(currentAction.value);
+        this.turtle.rotate(this.speed*currentAction.sense);
         currentAction.value-=this.speed;
     }
 };
 
 /**
- * Add a variation (@dx and @dy ) to the @currentSegment to make the animation and a translation of the @arrow, until it reaches the @arrivalPoint
+ * Add a variation (@dx and @dy ) to the @currentSegment to make the animation and a translation of the @turtle , until it reaches the @arrivalPoint
  * @return {nothing}
  */
 Drawer.prototype.drawCurrentSegment = function() {
@@ -102,9 +145,9 @@ Drawer.prototype.drawCurrentSegment = function() {
         this.currentSegment.x += this.dx;
         this.currentSegment.y += this.dy;
     }
-    this.arrow.translate(this.dx,this.dy);
-    this.x = this.arrow.position.x;
-    this.y = this.arrow.position.y;
+    this.turtle.translate(this.dx,this.dy);
+    this.x = this.turtle.position.x;
+    this.y = this.turtle.position.y;
 };
 /**
  * Change pen if the tracing should be done or not
@@ -159,12 +202,15 @@ Drawer.prototype.changePenSize = function(){
  * @return {nothing}
  */
 Drawer.prototype.updatePath = function(color,size){
+    this.turtle.clear();
+    paper.view.draw();
     var start = new paper.Point(this.x,this.y);
     this.path = new paper.Path();
     this.path.strokeColor = color;
     this.path.strokeWidth = size;
     this.path.add(start);
     this.path.add(start);
+    this.turtle = this.draw_turtle();
     this.arrivalPoint = undefined;
     this.lastPoint = new paper.Point(this.x, this.y); // last Point is the last point placed
     this.currentSegment = this.getCurrentSegment();
@@ -186,7 +232,7 @@ Drawer.prototype.isDrawingFinished = function() {
  */
 Drawer.prototype.isPointReached = function() {
     if(Math.abs(this.arrivalPoint.x-this.x)< Math.abs(this.dx) || Math.abs(this.arrivalPoint.y-this.y)< Math.abs(this.dy) ){
-        this.arrow.translate(this.arrivalPoint.x-this.x,this.arrivalPoint.y-this.y);
+        this.turtle.translate(this.arrivalPoint.x-this.x,this.arrivalPoint.y-this.y);
         if(this.penMove){
             this.currentSegment.x = this.arrivalPoint.x;
             this.currentSegment.y = this.arrivalPoint.y;

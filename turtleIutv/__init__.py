@@ -82,9 +82,9 @@ class Turtle(widgets.DOMWidget):
 
             t.speed(10) # Full speed
         '''
-        a = dict(type="speed",value=min(max(1, speed), 50))
+        a = dict(type="speed",value=speed)
         self.actions = self.actions + [a]
-        self.speedVar = min(max(1, speed), 10)
+        self.speedVar = speed
 
     def right(self, num):
         '''Turn the Turtle num degrees to the right.
@@ -122,8 +122,8 @@ class Turtle(widgets.DOMWidget):
 
             t.forward(100)
         '''
-        self.posX += round(num * Turtle.SCALE * math.sin(math.radians(self.bearing)), 1)
-        self.posY -= round(num * Turtle.SCALE * math.cos(math.radians(self.bearing)), 1)
+        self.posX += num * Turtle.SCALE * math.sin(math.radians(self.bearing))
+        self.posY -= num * Turtle.SCALE * math.cos(math.radians(self.bearing))
         
         self.b_change = 0
 
@@ -137,9 +137,8 @@ class Turtle(widgets.DOMWidget):
 
             t.backward(100)
         '''
-        
-        self.posX -= round(num * Turtle.SCALE * math.sin(math.radians(self.bearing)), 1)
-        self.posY += round(num * Turtle.SCALE * math.cos(math.radians(self.bearing)), 1)
+        self.posX -= num * Turtle.SCALE * math.sin(math.radians(self.bearing))
+        self.posY += num * Turtle.SCALE * math.cos(math.radians(self.bearing))
 
         self.b_change = 0
         a = dict(type="shifting",point= dict(x=self.posX, y=self.posY))
@@ -175,9 +174,9 @@ class Turtle(widgets.DOMWidget):
             t.setposition(100, 100)
         """
         if bearing is None:
-            self.posX = x
-            self.posY = y
-            a = dict(type="shifting",point= dict(x=x, y=y))
+            self.posX = x * Turtle.SCALE
+            self.posY = y * Turtle.SCALE
+            a = dict(type="shifting",point= dict(x=self.posX, y=self.posY))
             self.actions = self.actions + [a]
         elif isinstance(bearing, int):
             self.setbearing(bearing)
@@ -247,7 +246,6 @@ class Turtle(widgets.DOMWidget):
         self.bearing = 90
 
 
-
 turtleTmp = None
 def drawing(element_size=500, canvas_size = 1000, turtleShow=True):
     """Start a drawing
@@ -259,9 +257,6 @@ def drawing(element_size=500, canvas_size = 1000, turtleShow=True):
     #assert size>=400 and size<=1000, "La taille doit être compris entre 400 et 1000"
     global turtleTmp
     turtleTmp = Turtle(element_size,canvas_size,turtleShow)
-    #turtleTmp.speed(5)
-    #print("la taille Element : ",turtleTmp.SIZE_E)
-    #print("la taille canvas : ",turtleTmp.SIZE_C)
 
 def home():
     '''Move the Turtle to its home position.
@@ -307,11 +302,7 @@ def speed(n):
 
             speed(5)
     """
-    if n < 1:
-        n = 1
-    elif n > 10:
-        n = 10
-    turtleTmp.speed(n)
+    turtleTmp.speed(max(1,min(n,10)))
 
 def right(n):
     '''Turn the Turtle n degrees to the right.
@@ -333,7 +324,6 @@ def goto(x, y):
 
 def up():
     """Lift up the pen.
-
         Example::
 
             up()
@@ -358,10 +348,11 @@ def setColor(color):
             setColor("red")
     """
     turtleTmp.penColor(color)
+
 def setSize(size):
     """Change the size of the pen.
         Example::
 
             setSize(5)
     """
-    turtleTmp.penSize(size)
+    turtleTmp.penSize(max(1,min(size,100)))
