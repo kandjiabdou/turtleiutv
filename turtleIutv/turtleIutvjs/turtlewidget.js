@@ -71,9 +71,7 @@ define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbexten
                         drawer.doRotation();
                         break;
                     case "speed":
-                        drawer.speed = currentAction.value;
-                        drawer
-                        .actionCount++;
+                        drawer.changeSpeed();
                         break;
                     case "penColor":
                         drawer.changePenColor();

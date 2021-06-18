@@ -181,6 +181,15 @@ Drawer.prototype.changePenColor = function(){
 };
 
 /**
+ * Change the spped of the @turtl
+ * @return {nothing}
+ */
+ Drawer.prototype.changeSpeed = function(){
+    this.speed = this.getCurrentAction().value;
+    this.actionCount++;
+};
+
+/**
  * Change pen size if the new size of the @currentAction is different to @path size
  * @return {nothing}
  */
@@ -201,15 +210,12 @@ Drawer.prototype.changePenSize = function(){
  * @return {nothing}
  */
 Drawer.prototype.updatePath = function(color,size){
-    this.turtle.clear();
-    paper.view.draw();
     var start = new paper.Point(this.x,this.y);
     this.path = new paper.Path();
     this.path.strokeColor = color;
     this.path.strokeWidth = size;
     this.path.add(start);
     this.path.add(start);
-    this.turtle = this.draw_turtle();
     this.arrivalPoint = undefined;
     this.lastPoint = new paper.Point(this.x, this.y); // last Point is the last point placed
     this.currentSegment = this.getCurrentSegment();

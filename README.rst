@@ -36,3 +36,6 @@ Using it looks like this::
 
 .. image:: http://mybinder.org/badge.svg
    :target: https://beta.mybinder.org/v2/gh/lacroix/turtleIutv/master?filepath=try.ipynb
+
+
+les blème d'installation

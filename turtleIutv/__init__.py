@@ -48,7 +48,7 @@ class Turtle(widgets.DOMWidget):
         self.pen = 1
         self.speedVar = 1
         self.color = "black"
-        self.bearing = 90
+        self.angle = 90
         self.points = []
         self.actions = []
         self.posX = self.canvasElementSize/2
@@ -94,8 +94,8 @@ class Turtle(widgets.DOMWidget):
             t.right(90)
         '''
         
-        self.bearing += num
-        self.bearing = self.bearing%360
+        self.angle += num
+        self.angle = self.angle%360
         self.b_change = num
 
         a = dict(type="rotation",value=num,sense=1)
@@ -108,8 +108,8 @@ class Turtle(widgets.DOMWidget):
 
             t.left(90)
         '''
-        self.bearing -= num
-        self.bearing = self.bearing%360
+        self.angle -= num
+        self.angle = self.angle%360
         self.b_change = -num
 
         a = dict(type="rotation",value=num,sense=-1)
@@ -122,8 +122,8 @@ class Turtle(widgets.DOMWidget):
 
             t.forward(100)
         '''
-        self.posX += num * Turtle.SCALE * math.sin(math.radians(self.bearing))
-        self.posY -= num * Turtle.SCALE * math.cos(math.radians(self.bearing))
+        self.posX += num * Turtle.SCALE * math.sin(math.radians(self.angle))
+        self.posY -= num * Turtle.SCALE * math.cos(math.radians(self.angle))
         
         self.b_change = 0
 
@@ -137,8 +137,8 @@ class Turtle(widgets.DOMWidget):
 
             t.backward(100)
         '''
-        self.posX -= num * Turtle.SCALE * math.sin(math.radians(self.bearing))
-        self.posY += num * Turtle.SCALE * math.cos(math.radians(self.bearing))
+        self.posX -= num * Turtle.SCALE * math.sin(math.radians(self.angle))
+        self.posY += num * Turtle.SCALE * math.cos(math.radians(self.angle))
 
         self.b_change = 0
         a = dict(type="shifting",point= dict(x=self.posX, y=self.posY))
@@ -166,34 +166,34 @@ class Turtle(widgets.DOMWidget):
         self.actions = self.actions + [a]
         self.size = size
 
-    def setposition(self, x, y, bearing=None):
+    def setposition(self, x, y, angle=None):
         """Change the position of the turtle.
 
         Example::
 
             t.setposition(100, 100)
         """
-        if bearing is None:
+        if angle is None:
             self.posX = x * Turtle.SCALE
             self.posY = y * Turtle.SCALE
             a = dict(type="shifting",point= dict(x=self.posX, y=self.posY))
             self.actions = self.actions + [a]
-        elif isinstance(bearing, int):
-            self.setbearing(bearing)
+        elif isinstance(angle, int):
+            self.setangle(angle)
         else:
-            raise ValueError("Bearing must be an integer")
+            raise ValueError("Angle must be an integer")
         
 
-    def setbearing(self, bearing):
-        """Change the bearing (angle) of the turtle.
+    def setangle(self, angle):
+        """Change the angle (angle) of the turtle.
 
         Example::
 
-            t.setbearing(180)
+            t.setangle(180)
         """
-        diff = self.bearing - bearing
+        diff = self.angle - angle
         self.b_change = diff
-        self.bearing = bearing
+        self.angle = angle
         self.b_change = 0
 
 
@@ -209,7 +209,7 @@ class Turtle(widgets.DOMWidget):
             t.circle(50)
         """
         
-        temp = self.bearing
+        temp = self.angle
         self.b_change = 0
         tempSpeed = self.speedVar
         self.speedVar = 1
@@ -223,9 +223,9 @@ class Turtle(widgets.DOMWidget):
                 self.forward(n)
                 self.right(2)
         if(radius >= 0):
-            self.bearing = (temp + extent)
+            self.angle = (temp + extent)
         else:
-            self.bearing = (temp - extent)
+            self.angle = (temp - extent)
         self.speedVar = tempSpeed
 
     def home(self):
@@ -239,11 +239,11 @@ class Turtle(widgets.DOMWidget):
         self.posY = self.canvasElementSize/2
         a = dict(type="shifting",point= dict(x=self.posX, y=self.posY))
         self.actions = self.actions + [a]
-        if 90 < self.bearing <=270:
-            self.b_change = - (self.bearing - 90)
+        if 90 < self.angle <=270:
+            self.b_change = - (self.angle - 90)
         else:
-            self.b_change = 90 - self.bearing
-        self.bearing = 90
+            self.b_change = 90 - self.angle
+        self.angle = 90
 
 
 turtleTmp = None
