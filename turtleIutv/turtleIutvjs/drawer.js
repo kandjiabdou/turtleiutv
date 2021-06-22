@@ -125,15 +125,9 @@ Drawer.prototype.doDeplacement = function() {
  */
 Drawer.prototype.doRotation = function(){
     var currentAction = this.getCurrentAction();
-    if(currentAction.value <= this.speed){
-        // Finish rotation
-        this.turtle.rotate(currentAction.value*currentAction.sense);
-        this.actionCount++;
-        console.log("Finish Rotation !");
-    }else{// do rotation
-        this.turtle.rotate(this.speed*currentAction.sense);
-        currentAction.value-=this.speed;
-    }
+    console.log(currentAction.value);
+    this.turtle.rotate(currentAction.value*currentAction.sense);
+    this.actionCount++;
 };
 
 /**

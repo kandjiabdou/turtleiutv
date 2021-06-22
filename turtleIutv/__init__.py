@@ -244,6 +244,7 @@ class Turtle(widgets.DOMWidget):
         else:
             self.b_change = 90 - self.angle
         self.angle = 90
+        print(self.actions)
 
 
 turtleTmp = None
