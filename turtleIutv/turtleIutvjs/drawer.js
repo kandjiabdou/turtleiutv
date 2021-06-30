@@ -25,8 +25,8 @@
  * @param {Array<Object>} actions - Action table to perform
  * @return {Drawer(Object)} - new Drawer(start,actions)
  */
-function Drawer(start,actions) {
-    this.actions = actions;
+ function Drawer(start) {
+    this.actions = [];
     this.path = new paper.Path();
     this.path.strokeColor = 'black';
     this.path.strokeWidth = 3;
@@ -47,7 +47,7 @@ function Drawer(start,actions) {
     this.arrivalPoint = undefined;
     this.lastPoint = new paper.Point(this.x, this.y); // last Point is the last point placed
     this.currentSegment = this.getCurrentSegment(); // currentSegment is the current segment to be plotted
-    
+    this.currentAngle=undefined;
 };
 
 /**
@@ -125,9 +125,19 @@ Drawer.prototype.doDeplacement = function() {
  */
 Drawer.prototype.doRotation = function(){
     var currentAction = this.getCurrentAction();
-    console.log(currentAction.value);
-    this.turtle.rotate(currentAction.value*currentAction.sense);
-    this.actionCount++;
+    if(this.currentAngle==undefined){
+        this.currentAngle = currentAction.value;
+    }
+    if(this.currentAngle <= this.speed){
+        // Add the remaining rotation angle and finish the rotation
+        this.turtle.rotate(this.currentAngle*currentAction.sense);
+        this.currentAngle = undefined;
+        this.actionCount++;
+
+    }else{// do rotation
+        this.currentAngle-=this.speed;
+        this.turtle.rotate(this.speed*currentAction.sense);
+    }
 };
 
 /**

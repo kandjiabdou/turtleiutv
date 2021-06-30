@@ -1,14 +1,18 @@
 define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbextensions/turtleIutvjs/drawer'], function(paperlib, widget){
 
     function TurtleDrawing(canvas_element, canvasElementSize, canvasSize, grid_button, help_button) {
-        this.actions = [];
         this.canvasSize = canvasSize;
         this.canvasElementSize = canvasElementSize;
         this.canvas = canvas_element;
         this.canvas.style.background = '#99CCFF';
         this.x = this.canvasElementSize/2;
         this.y = this.canvasElementSize/2;
+
         paper.setup(this.canvas);
+
+        console.log("Starting ....");
+        var start = new paper.Point(this.x,this.y);
+        this.drawer = new Drawer(start);
 
         $( window ).resize(function() {
             $( "#log" ).append( "<div>Handler for .resize() called.</div>" );
@@ -53,43 +57,35 @@ define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbexten
             alert("example:\nfrom turtleIutv import *\ndrawing()\nforward(50)\n");
         });
 
-        //######################################################################################################
-        console.log("Starting ....");
-        var start = new paper.Point(this.x,this.y);
-        var drawer = new Drawer(start,this.actions);
-
         // Loop, must go through each new action and make an animation if necessary
         paper.view.on('frame', function(event) {
-            drawer.actions = that.actions;
-            if(!drawer.isDrawingFinished()){
-                var currentAction = drawer.getCurrentAction();
+            //that.drawer.actions = that.actions;
+            if(!that.drawer.isDrawingFinished()){
+                var currentAction = that.drawer.getCurrentAction();
                 switch(currentAction.type){
                     case "shifting":
-                        drawer.doDeplacement();
+                        that.drawer.doDeplacement();
                         break;
                     case "rotation":
-                        drawer.doRotation();
+                        that.drawer.doRotation();
                         break;
                     case "speed":
-                        drawer.changeSpeed();
+                        that.drawer.changeSpeed();
                         break;
                     case "penColor":
-                        drawer.changePenColor();
+                        that.drawer.changePenColor();
                         break;
                     case "penSize":
-                        drawer.changePenSize();
+                        that.drawer.changePenSize();
                         break;
                     case "pen":
-                        drawer.doPenMove();
+                        that.drawer.doPenMove();
                         break;
                     default:
-                        drawer.actionCount++;
+                        that.drawer.actionCount++;
                 }
             }
-        });
-
-        //######################################################################################################
-        
+        });        
     }
     
     // Define the DatePickerView
@@ -129,14 +125,13 @@ define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbexten
             canvasDiv.append(canvas);
             
             this.turtledrawing = new TurtleDrawing(canvas,canvasElementSize, canvasSize, gridButton, helpButton);
-            this.turtledrawing.actions = this.model.get('actions');
+            this.turtledrawing.drawer.actions = this.model.get('actions');
             
             this.$el.append(turtleArea);
             window.debugturtle = this;
         },
         update: function(options) {
-            //console.log("doing update");
-            this.turtledrawing.actions = this.model.get('actions');
+            this.turtledrawing.drawer.actions = this.model.get('actions');
         }
     });
 

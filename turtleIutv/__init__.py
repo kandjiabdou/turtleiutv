@@ -96,7 +96,6 @@ class Turtle(widgets.DOMWidget):
         
         self.angle += num
         self.angle = self.angle%360
-        self.b_change = num
 
         a = dict(type="rotation",value=num,sense=1)
         self.actions = self.actions + [a]
@@ -110,7 +109,6 @@ class Turtle(widgets.DOMWidget):
         '''
         self.angle -= num
         self.angle = self.angle%360
-        self.b_change = -num
 
         a = dict(type="rotation",value=num,sense=-1)
         self.actions = self.actions + [a]
@@ -125,8 +123,6 @@ class Turtle(widgets.DOMWidget):
         self.posX += num * Turtle.SCALE * math.sin(math.radians(self.angle))
         self.posY -= num * Turtle.SCALE * math.cos(math.radians(self.angle))
         
-        self.b_change = 0
-
         a = dict(type="shifting",point= dict(x=self.posX, y=self.posY))
         self.actions = self.actions + [a]
 
@@ -140,7 +136,6 @@ class Turtle(widgets.DOMWidget):
         self.posX -= num * Turtle.SCALE * math.sin(math.radians(self.angle))
         self.posY += num * Turtle.SCALE * math.cos(math.radians(self.angle))
 
-        self.b_change = 0
         a = dict(type="shifting",point= dict(x=self.posX, y=self.posY))
         self.actions = self.actions + [a]
 
@@ -166,35 +161,35 @@ class Turtle(widgets.DOMWidget):
         self.actions = self.actions + [a]
         self.size = size
 
-    def setposition(self, x, y, angle=None):
+    def setposition(self, x, y):
         """Change the position of the turtle.
 
         Example::
 
             t.setposition(100, 100)
         """
-        if angle is None:
-            self.posX = x * Turtle.SCALE
-            self.posY = y * Turtle.SCALE
-            a = dict(type="shifting",point= dict(x=self.posX, y=self.posY))
-            self.actions = self.actions + [a]
-        elif isinstance(angle, int):
-            self.setangle(angle)
-        else:
-            raise ValueError("Angle must be an integer")
-        
+        toX = x * Turtle.SCALE
+        toY = y * Turtle.SCALE
+        sensX = self.posX + math.sin(math.radians(self.angle))
+        sensY = self.posY - math.cos(math.radians(self.angle))
 
-    def setangle(self, angle):
-        """Change the angle (angle) of the turtle.
+        a = math.degrees(math.atan2(toY- self.posY, toX- self.posX) - math.atan2(sensY- self.posY, sensX- self.posX))
+        print("to  : (x =",toX,", y =",toY)
+        print("Pos  : (x =",self.posX,", y =",self.posY)
+        print("sens  : (x =",sensX,", y =",sensY)
+        print("angle to rotate :",a)
+        print("actual angle    :",self.angle,"\n")
 
-        Example::
+        if(abs(a)>180): a-=360
+        if(a>0) :
+            self.right(a)
+        else :
+            self.left(-a)
 
-            t.setangle(180)
-        """
-        diff = self.angle - angle
-        self.b_change = diff
-        self.angle = angle
-        self.b_change = 0
+        self.posX = toX
+        self.posY = toY
+        a = dict(type="shifting",point = dict(x=self.posX, y=self.posY))
+        self.actions = self.actions + [a]
 
 
     def circle(self, radius, extent=360):
@@ -235,16 +230,9 @@ class Turtle(widgets.DOMWidget):
 
             t.home()
         '''
-        self.posX = self.canvasElementSize/2
-        self.posY = self.canvasElementSize/2
-        a = dict(type="shifting",point= dict(x=self.posX, y=self.posY))
-        self.actions = self.actions + [a]
-        if 90 < self.angle <=270:
-            self.b_change = - (self.angle - 90)
-        else:
-            self.b_change = 90 - self.angle
-        self.angle = 90
-        print(self.actions)
+        
+        center = self.canvasSize/2
+        self.setposition(center,center)
 
 
 turtleTmp = None
