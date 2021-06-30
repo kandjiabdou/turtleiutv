@@ -174,11 +174,6 @@ class Turtle(widgets.DOMWidget):
         sensY = self.posY - math.cos(math.radians(self.angle))
 
         a = math.degrees(math.atan2(toY- self.posY, toX- self.posX) - math.atan2(sensY- self.posY, sensX- self.posX))
-        print("to  : (x =",toX,", y =",toY)
-        print("Pos  : (x =",self.posX,", y =",self.posY)
-        print("sens  : (x =",sensX,", y =",sensY)
-        print("angle to rotate :",a)
-        print("actual angle    :",self.angle,"\n")
 
         if(abs(a)>180): a-=360
         if(a>0) :
@@ -230,7 +225,7 @@ class Turtle(widgets.DOMWidget):
 
             t.home()
         '''
-        
+
         center = self.canvasSize/2
         self.setposition(center,center)
 
