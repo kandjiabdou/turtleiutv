@@ -10,15 +10,13 @@ __version__ = '0.8'
 
 def install_js():
     pkgdir = os.path.dirname(__file__)
-    nbextensions.install_nbextension(os.path.join(pkgdir, 'turtleIutvjs'),
-                                     user=True)
+    nbextensions.install_nbextension(os.path.join(pkgdir, 'turtleIutvjs'), user=True)
 
 class Turtle(widgets.DOMWidget):
     _view_module = Unicode("nbextensions/turtleIutvjs/turtlewidget").tag(sync=True)
     _view_name = Unicode('TurtleView').tag(sync=True)
     # TODO: Make this an eventful list, so we're not transferring the whole
     # thing on every sync
-    points = List(sync=True)
     actions = List(sync=True)
     canvasSize = Int(sync=True)
     canvasElementSize = Int(sync=True)
@@ -45,11 +43,7 @@ class Turtle(widgets.DOMWidget):
         Turtle.SIZE_E=ce
         Turtle.SCALE = ce/cs
         
-        self.pen = 1
-        self.speedVar = 1
-        self.color = "black"
         self.angle = 90
-        self.points = []
         self.actions = []
         self.posX = self.canvasElementSize/2
         self.posY = self.canvasElementSize/2
@@ -60,9 +54,8 @@ class Turtle(widgets.DOMWidget):
 
             t.pendown()
         '''
-        a = dict(type="pen",value=True)
-        self.actions = self.actions + [a]
-        self.pen = 1
+        action = dict(type="pen",value=True)
+        self.actions = self.actions + [action]
 
     def penup(self):
         '''Lift up the pen.
@@ -71,9 +64,8 @@ class Turtle(widgets.DOMWidget):
 
             t.penup()
         '''
-        a = dict(type="pen",value=False)
-        self.actions = self.actions + [a]
-        self.pen = 0
+        action = dict(type="pen",value=False)
+        self.actions = self.actions + [action]
 
     def speed(self, speed):
         '''Change the speed of the turtle (range 1-10).
@@ -82,9 +74,8 @@ class Turtle(widgets.DOMWidget):
 
             t.speed(10) # Full speed
         '''
-        a = dict(type="speed",value=speed)
-        self.actions = self.actions + [a]
-        self.speedVar = speed
+        action = dict(type="speed",value=speed)
+        self.actions = self.actions + [action]
 
     def right(self, num):
         '''Turn the Turtle num degrees to the right.
@@ -97,8 +88,8 @@ class Turtle(widgets.DOMWidget):
         self.angle += num
         self.angle = self.angle%360
 
-        a = dict(type="rotation",value=num,sense=1)
-        self.actions = self.actions + [a]
+        action = dict(type="rotation",value=num,sense=1)
+        self.actions = self.actions + [action]
 
     def left(self, num):
         '''Turn the Turtle num degrees to the left.
@@ -110,8 +101,8 @@ class Turtle(widgets.DOMWidget):
         self.angle -= num
         self.angle = self.angle%360
 
-        a = dict(type="rotation",value=num,sense=-1)
-        self.actions = self.actions + [a]
+        action = dict(type="rotation",value=num,sense=-1)
+        self.actions = self.actions + [action]
 
     def forward(self, num):
         '''Move the Turtle forward by num units.
@@ -123,8 +114,8 @@ class Turtle(widgets.DOMWidget):
         self.posX += num * Turtle.SCALE * math.sin(math.radians(self.angle))
         self.posY -= num * Turtle.SCALE * math.cos(math.radians(self.angle))
         
-        a = dict(type="shifting",point= dict(x=self.posX, y=self.posY))
-        self.actions = self.actions + [a]
+        action = dict(type="shifting",point= dict(x=self.posX, y=self.posY))
+        self.actions = self.actions + [action]
 
     def backward(self, num):
         '''Move the Turtle backward by num units.
@@ -136,8 +127,8 @@ class Turtle(widgets.DOMWidget):
         self.posX -= num * Turtle.SCALE * math.sin(math.radians(self.angle))
         self.posY += num * Turtle.SCALE * math.cos(math.radians(self.angle))
 
-        a = dict(type="shifting",point= dict(x=self.posX, y=self.posY))
-        self.actions = self.actions + [a]
+        action = dict(type="shifting",point= dict(x=self.posX, y=self.posY))
+        self.actions = self.actions + [action]
 
     def penColor(self, color):
         '''Change the color of the pen to color. Default is black.
@@ -146,9 +137,8 @@ class Turtle(widgets.DOMWidget):
 
             t.penColor("red")
         '''
-        a = dict(type="penColor",value= color)
-        self.actions = self.actions + [a]
-        self.color = color
+        action = dict(type="penColor",value= color)
+        self.actions = self.actions + [action]
 
     def penSize(self, size):
         '''Change the size of the pen to size. Default is 3.
@@ -157,9 +147,8 @@ class Turtle(widgets.DOMWidget):
 
             t.penSize(5)
         '''
-        a = dict(type="penSize",value= size)
-        self.actions = self.actions + [a]
-        self.size = size
+        action = dict(type="penSize",value= size)
+        self.actions = self.actions + [action]
 
     def setposition(self, x, y):
         """Change the position of the turtle.
@@ -170,21 +159,44 @@ class Turtle(widgets.DOMWidget):
         """
         toX = x * Turtle.SCALE
         toY = y * Turtle.SCALE
+        if(self.posX == toX and self.posY == toY): return
         sensX = self.posX + math.sin(math.radians(self.angle))
         sensY = self.posY - math.cos(math.radians(self.angle))
 
-        a = math.degrees(math.atan2(toY- self.posY, toX- self.posX) - math.atan2(sensY- self.posY, sensX- self.posX))
+        alpha = math.degrees(math.atan2(toY- self.posY, toX- self.posX) - math.atan2(sensY- self.posY, sensX- self.posX))
+        if(abs(alpha)>180):
+            alpha= (alpha- 360)%360
 
-        if(abs(a)>180): a-=360
-        if(a>0) :
-            self.right(a)
+        if(alpha>0) :
+            self.right(alpha)
         else :
-            self.left(-a)
+            self.left(-alpha)
 
         self.posX = toX
         self.posY = toY
-        a = dict(type="shifting",point = dict(x=self.posX, y=self.posY))
-        self.actions = self.actions + [a]
+        action = dict(type="shifting",point = dict(x=self.posX, y=self.posY))
+        self.actions = self.actions + [action]
+
+    def begin_fill(self,color):
+        """ Start the process of coloring a figure, if the path is closed.
+            Known colors: "red", "blue", "yellow", "brown", "black", "purple", "green"
+
+            Example::
+
+                begin_fill("red")
+        """
+        action = dict(type = "filling",value = True, color = color)
+        self.actions = self.actions + [action]
+
+    def end_fill(self):
+        """ Stop the process of coloring a figure.
+            
+            Example::
+
+                end_fill()
+        """
+        action = dict(type = "filling",value = False)
+        self.actions = self.actions + [action]
 
 
     def circle(self, radius, extent=360):
@@ -201,8 +213,7 @@ class Turtle(widgets.DOMWidget):
         
         temp = self.angle
         self.b_change = 0
-        tempSpeed = self.speedVar
-        self.speedVar = 1
+        tempSpeed = 5
 
         for i in range(0, (extent//2)):
             n = math.fabs(math.radians(self.b_change) * radius)
@@ -216,7 +227,6 @@ class Turtle(widgets.DOMWidget):
             self.angle = (temp + extent)
         else:
             self.angle = (temp - extent)
-        self.speedVar = tempSpeed
 
     def home(self):
         '''Move the Turtle to its home position.
@@ -340,3 +350,22 @@ def setSize(size):
             setSize(5)
     """
     turtleTmp.penSize(max(1,min(size,100)))
+
+def begin_fill(color):
+    """ Start the process of coloring a figure, if the path is closed.
+        Known colors: "red", "blue", "yellow", "brown", "black", "purple", "green"
+
+        Example::
+
+            begin_fill("red")
+    """
+    turtleTmp.begin_fill(color)
+
+def end_fill():
+    """ Stop the process of coloring a figure.
+        
+        Example::
+
+            end_fill()
+    """
+    turtleTmp.end_fill()

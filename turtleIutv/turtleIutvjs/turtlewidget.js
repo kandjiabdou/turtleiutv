@@ -10,7 +10,6 @@ define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbexten
 
         paper.setup(this.canvas);
 
-        console.log("Starting ....");
         var start = new paper.Point(this.x,this.y);
         this.drawer = new Drawer(start);
 
@@ -80,6 +79,9 @@ define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbexten
                         break;
                     case "pen":
                         that.drawer.doPenMove();
+                        break;
+                    case "filling":
+                        that.drawer.doFilling();
                         break;
                     default:
                         that.drawer.actionCount++;
