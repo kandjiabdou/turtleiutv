@@ -7,22 +7,25 @@
  * @param {Array<Object>} actions - Action table to perform, the possible types of actions are: shifting, rotation, speed, pen, penColor, penSize
  * @param {Path} path - Path containing the points to be drawn
  * @param {Boolean} penMove - If this value is TRUE a displacement is drawn, otherwise the stylus is raised and no segment is drawn.
+ * @param {Boolean} filling - If this value is TRUE figure are drawn if only there is an intersection, otherwise do a normal animation
  * @param {Double} dx - Variation of a displacement on the x-axis
  * @param {Double} dy - Variation of a displacement on the y-axis
  * @param {Double} x - Current pen or turtle position on the x-axis
  * @param {Double} y - Current pen or turtle position on the y-axis
  * @param {Int} actionCount - Number indicating the position of the current action in the @actions array
  * @param {Color} turtleColour - Color of the @turtle 
+ * @param {Color} fillingColor - Color of the filling figure 
  * @param {Groupe} turtle - Turtle in green color indicating the route
  * @param {Point} arrivalPoint - The point to be reached by drawing the @currentSegment
  * @param {Point} lastPoint - The start point of the @currentSegment , so it is the last point attains
  * @param {Segment} currentSegment - Current segment to be traced during the animation
+ * @param {Double} currentAngle - Current angle to be rotate during the animation
+ * @param {Int} countIntersection - Number of intersection if the process of filling is started
  */
 
 /** Construtor
  * Create an instance of the class
  * @param {Point} start - Start point of the @path
- * @param {Array<Object>} actions - Action table to perform
  * @return {Drawer(Object)} - new Drawer(start,actions)
  */
  function Drawer(start) {
@@ -214,6 +217,60 @@ Drawer.prototype.changePenSize = function(){
 };
 
 /**
+ * Start or stop the process of coloring a figure, if the path is closed.
+    Known colors: "red", "blue", "yellow", "brown", "black", "purple", "green"
+ */
+Drawer.prototype.doFilling = function (){
+    var currentAction = this.getCurrentAction();
+    if(currentAction.value!=this.filling){
+        // if the value is changed
+        this.filling=!this.filling;
+        if(this.filling){
+            // if it is true, create a new path to start drawing
+            this.fillingColor = currentAction.color;
+            var color = this.path.strokeColor ;
+            var size = this.path.strokeWidth;
+            this.updatePath(color, size);
+        }else{
+            this.countIntersection=0;
+        }
+    }
+    this.actionCount++;
+};
+
+/**
+ * Fill color if intersection
+ * @return {nothing}
+ */
+Drawer.prototype.fillColorIfIntersection = function (){
+    // Vérifie les intersections
+    var intersections = this.path.getIntersections(this.path);
+    if(intersections.length !=this.countIntersection ){ // S'il y a un nouveau, on colorie
+        // ptInter est le nouveau point d'intersection
+        var ptInter = intersections[this.countIntersection];
+        var last = ptInter._segment2;
+        this.countIntersection++;
+
+        // If the point of intersection is not on the part of the coloring path,
+        // ie we start from begin_fill(), we do not do the coloring even if there is intersection.
+
+        //crée le path à remplir
+        var pathToColor = new paper.Path();
+        pathToColor.strokeColor = "red";
+        pathToColor.strokeWidth = 4;
+        pathToColor.fillColor = this.fillingColor;
+        // Parcourir le Paht tracé et ajouter les segments qui appartiennent à la figure fermée.
+        for(i=this.path.segments.length-1; i > last.index-1; i--){
+            var point = this.path.segments[i].point;
+            pathToColor.add(point);
+        }
+        pathToColor.add(ptInter.point);
+        pathToColor.insertBelow(this.path);
+        this.path.insertBelow(this.turtle);
+    }
+};
+
+/**
  * Reinitialize the @path
  * Then update variables @arrivalPoint , @lastPoint  and @currentSegment
  * @param {Color} color - The new color of the @path
@@ -292,56 +349,4 @@ Drawer.prototype.getDx = function (){ // return the current action
  */
 Drawer.prototype.getDy = function (){ // return the current action
     return (this.arrivalPoint.y - this.lastPoint.y)*this.speed/(this.arrivalPoint.getDistance(this.lastPoint));
-};
-/**
- * Start or stop the process of coloring a figure, if the path is closed.
-    Known colors: "red", "blue", "yellow", "brown", "black", "purple", "green"
- */
- Drawer.prototype.doFilling = function (){
-    var currentAction = this.getCurrentAction();
-    if(currentAction.value!=this.filling){
-        // if the value is changed
-        this.filling=!this.filling;
-        if(this.filling){
-            // if it is true, create a new path to start drawing
-            this.fillingColor = currentAction.color;
-            var color = this.path.strokeColor ;
-            var size = this.path.strokeWidth;
-            this.updatePath(color, size);
-        }else{
-            this.countIntersection=0;
-        }
-    }
-    this.actionCount++;
-};
- /**
- * Fill color if intersection
- * @return {nothing}
- */
-  Drawer.prototype.fillColorIfIntersection = function (){
-    // Vérifie les intersections
-    var intersections = this.path.getIntersections(this.path);
-    if(intersections.length !=this.countIntersection ){ // S'il y a un nouveau, on colorie
-        // ptInter est le nouveau point d'intersection
-        var ptInter = intersections[this.countIntersection];
-        var last = ptInter._segment2;
-        this.countIntersection++;
-
-        // If the point of intersection is not on the part of the coloring path,
-        // ie we start from begin_fill(), we do not do the coloring even if there is intersection.
-
-        //crée le path à remplir
-        var pathToColor = new paper.Path();
-        pathToColor.strokeColor = "red";
-        pathToColor.strokeWidth = 4;
-        pathToColor.fillColor = this.fillingColor;
-        // Parcourir le Paht tracé et ajouter les segments qui appartiennent à la figure fermée.
-        for(i=this.path.segments.length-1; i > last.index-1; i--){
-            var point = this.path.segments[i].point;
-            pathToColor.add(point);
-        }
-        pathToColor.add(ptInter.point);
-        pathToColor.insertBelow(this.path);
-        this.path.insertBelow(this.turtle);
-    }
 };
