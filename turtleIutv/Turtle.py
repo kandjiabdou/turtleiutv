@@ -180,7 +180,7 @@ class Turtle(widgets.DOMWidget):
 
         alpha = math.degrees(math.atan2(toY- self.posY, toX- self.posX) - math.atan2(sensY- self.posY, sensX- self.posX))
         if(abs(alpha)>180):
-            alpha= (alpha- 360)%360
+            alpha = (alpha - 360)%360
 
         if(alpha>0) :
             self.right(alpha)

@@ -256,8 +256,8 @@ Drawer.prototype.fillColorIfIntersection = function (){
 
         //crée le path à remplir
         var pathToColor = new paper.Path();
-        pathToColor.strokeColor = "red";
-        pathToColor.strokeWidth = 4;
+        pathToColor.strokeColor = this.path.strokeColor;
+        pathToColor.strokeWidth = this.path.strokeWidth;
         pathToColor.fillColor = this.fillingColor;
         // Parcourir le Paht tracé et ajouter les segments qui appartiennent à la figure fermée.
         for(i=this.path.segments.length-1; i > last.index-1; i--){

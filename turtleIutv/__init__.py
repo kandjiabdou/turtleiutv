@@ -118,7 +118,7 @@ def setSize(size):
     """
     turtleTmp.penSize(max(1,min(size,100)))
 
-def begin_fill(color):
+def begin_fill(color="black"):
     """ Start the process of coloring a figure, if the path is closed.
         Known colors: "red", "blue", "yellow", "brown", "black", "purple", "green"
 
