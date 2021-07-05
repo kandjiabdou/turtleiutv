@@ -216,7 +216,7 @@ class Turtle(widgets.DOMWidget):
         action = dict(type = "filling",value = False)
         self.actions = self.actions + [action]
 
-    def circle(self, radius, extent=360):
+    def circle(self, radius, extent):
         """Draw a circle, or part of a circle.
 
         From its current position, the turtle will draw a series of short lines,

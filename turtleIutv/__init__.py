@@ -137,11 +137,15 @@ def end_fill():
     """
     turtleTmp.end_fill()
 
-def circle(radius):
-    """ Stop the process of coloring a figure.
-        
+def circle(radius,extent=360):
+    """Draw a circle, or part of a circle.
+
+        From its current position, the turtle will draw a series of short lines,
+        turning slightly between each. If radius is positive, it will turn to
+        its left; a negative radius will make it turn to its right.
+
         Example::
 
-            end_fill()
+            circle(50)
     """
-    turtleTmp.circle(radius)
+    turtleTmp.circle(radius,extent)
