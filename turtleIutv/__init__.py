@@ -1,14 +1,11 @@
-import os.path
-import sys
-from ipywidgets import widgets
-from notebook import nbextensions
 from .Turtle import *
 
 __version__ = '1.0'
 
-def install_js():
-    pkgdir = os.path.dirname(__file__)
-    nbextensions.install_nbextension(os.path.join(pkgdir, 'turtleIutvjs'), user=True)
+# This file initializes the turtle with a global variable
+# It uses the Turtle class to do procedural programming
+# and avoid object programming, because beginners are not familiar with the Object.
+# So it's just rewritten functions of the Turtle class.
 
 turtleTmp = None
 def drawing(element_size=500, canvas_size = 1000, turtleShow=True):
@@ -139,3 +136,12 @@ def end_fill():
             end_fill()
     """
     turtleTmp.end_fill()
+
+def circle(radius):
+    """ Stop the process of coloring a figure.
+        
+        Example::
+
+            end_fill()
+    """
+    turtleTmp.circle(radius)
