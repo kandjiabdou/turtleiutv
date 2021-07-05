@@ -45,6 +45,7 @@ class Turtle(widgets.DOMWidget):
         self.angle = 90
         self.filling = False
         self.fillingColor = "black"
+        self.fillingStrokeColor = "black"
         self.actions = []
         self.posX = self.canvasElementSize/2
         self.posY = self.canvasElementSize/2
@@ -192,7 +193,7 @@ class Turtle(widgets.DOMWidget):
         action = dict(type="shifting",point = dict(x=self.posX, y=self.posY))
         self.actions = self.actions + [action]
 
-    def begin_fill(self,color):
+    def begin_fill(self,color,strokeColor):
         """ Start the process of coloring a figure, if the path is closed.
             Known colors: "red", "blue", "yellow", "brown", "black", "purple", "green"
 
@@ -202,7 +203,8 @@ class Turtle(widgets.DOMWidget):
         """
         self.filling = True
         self.fillingColor = color
-        action = dict(type = "filling",value = True, color = color)
+        self.fillingStrokeColor = strokeColor
+        action = dict(type = "filling",value = True, color = color, strokeColor=strokeColor)
         self.actions = self.actions + [action]
 
     def end_fill(self):
@@ -245,7 +247,7 @@ class Turtle(widgets.DOMWidget):
 
         if(self.filling):
             self.end_fill()
-            self.begin_fill(self.fillingColor)
+            self.begin_fill(self.fillingColor,self.fillingStrokeColor)
 
         self.left(w2)
         for i in range(steps):
@@ -260,7 +262,7 @@ class Turtle(widgets.DOMWidget):
         self.pendown()
         if(self.filling):
             self.end_fill()
-            self.begin_fill(self.fillingColor)
+            self.begin_fill(self.fillingColor,self.fillingStrokeColor)
 
     def home(self):
         '''Move the Turtle to its home position.

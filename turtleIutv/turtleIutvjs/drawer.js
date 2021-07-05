@@ -15,6 +15,7 @@
  * @param {Int} actionCount - Number indicating the position of the current action in the @actions array
  * @param {Color} turtleColour - Color of the @turtle 
  * @param {Color} fillingColor - Color of the filling figure 
+ * @param {Color} fillingStrokeColor - Color of the stroke of the filling figure 
  * @param {Groupe} turtle - Turtle in green color indicating the route
  * @param {Point} arrivalPoint - The point to be reached by drawing the @currentSegment
  * @param {Point} lastPoint - The start point of the @currentSegment , so it is the last point attains
@@ -39,7 +40,8 @@
     this.speed = 1;
     this.penMove = true;
     this.filling = false;
-    this.fillingColor = "red";
+    this.fillingColor = "black";
+    this.fillingStrokeColor= "black"
     this.dx = 1;
     this.dy = 1;
     this.x = start.x;
@@ -228,6 +230,7 @@ Drawer.prototype.doFilling = function (){
         if(this.filling){
             // if it is true, create a new path to start drawing
             this.fillingColor = currentAction.color;
+            this.fillingStrokeColor = currentAction.strokeColor;
             var color = this.path.strokeColor ;
             var size = this.path.strokeWidth;
             this.updatePath(color, size);
@@ -256,9 +259,10 @@ Drawer.prototype.fillColorIfIntersection = function (){
 
         //crée le path à remplir
         var pathToColor = new paper.Path();
-        pathToColor.strokeColor = this.path.strokeColor;
         pathToColor.strokeWidth = this.path.strokeWidth;
         pathToColor.fillColor = this.fillingColor;
+        pathToColor.strokeColor = this.fillingStrokeColor;
+
         // Parcourir le Paht tracé et ajouter les segments qui appartiennent à la figure fermée.
         for(i=this.path.segments.length-1; i > last.index-1; i--){
             var point = this.path.segments[i].point;
