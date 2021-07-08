@@ -8,7 +8,7 @@ __version__ = '1.0'
 # So it's just rewritten functions of the Turtle class.
 
 turtleTmp = None
-def drawing(element_size=500, canvas_size = 1000, turtleShow=True):
+def drawing(width = 500, limit = 1000,color = "#99CCFF", turtle = True ):
     """Start a drawing
 
     Example::
@@ -17,7 +17,7 @@ def drawing(element_size=500, canvas_size = 1000, turtleShow=True):
     """
     #assert size>=400 and size<=1000, "La taille doit être compris entre 400 et 1000"
     global turtleTmp
-    turtleTmp = Turtle(element_size,canvas_size,turtleShow)
+    turtleTmp = Turtle(width,limit,color,turtle)
 
 def home():
     '''Move the Turtle to its home position.

@@ -29,7 +29,7 @@
  * @param {Point} start - Start point of the @path
  * @return {Drawer(Object)} - new Drawer(start,actions)
  */
- function Drawer(start) {
+ function Drawer(start,showTurtle) {
     this.actions = [];
     this.path = new paper.Path();
     this.path.strokeColor = 'black';
@@ -37,6 +37,7 @@
     this.path.add(start);
     this.path.add(start);
 
+    this.showTurtle = showTurtle;
     this.speed = 1;
     this.penMove = true;
     this.filling = false;
@@ -64,41 +65,46 @@
  * @return {paper.Group}
  */
 Drawer.prototype.draw_turtle = function() {
-
-    var tail = new paper.Path.RegularPolygon(new paper.Point(this.x-11,this.y), 3, 3);
-    tail.rotate(30);
-    tail.fillColor = this.turtleColour;
-    var circlePoint = new paper.Point(this.x, this.y);
-
-    var circle1 = new paper.Path.Circle(circlePoint, 10);
-    circle1.fillColor = this.turtleColour;
-
-    circlePoint = new paper.Point(this.x+7, this.y-10);
-
-    var circle2 = new paper.Path.Circle(circlePoint, 3);
-    circle2.fillColor = this.turtleColour;
-
-    circlePoint = new paper.Point(this.x-7, this.y+10);
-
-    var circle3 = new paper.Path.Circle(circlePoint, 3);
-    circle3.fillColor = this.turtleColour;
-
-    circlePoint = new paper.Point(this.x+7, this.y+10);
-
-    var circle4 = new paper.Path.Circle(circlePoint, 3);
-    circle4.fillColor = this.turtleColour;
-
-    circlePoint = new paper.Point(this.x-7, this.y-10);
-
-    var circle5 = new paper.Path.Circle(circlePoint, 3);
-    circle5.fillColor = this.turtleColour;
-
-    circlePoint = new paper.Point(this.x+10, this.y);
-
-    var circle6 = new paper.Path.Circle(circlePoint, 5);
-    circle6.fillColor = this.turtleColour;
-
-    return  new paper.Group([circle1,circle2,circle3,circle4,circle5,circle6,tail]);
+    if(this.showTurtle){
+        var tail = new paper.Path.RegularPolygon(new paper.Point(this.x-11,this.y), 3, 3);
+        tail.rotate(30);
+        tail.fillColor = this.turtleColour;
+        var circlePoint = new paper.Point(this.x, this.y);
+    
+        var circle1 = new paper.Path.Circle(circlePoint, 10);
+        circle1.fillColor = this.turtleColour;
+    
+        circlePoint = new paper.Point(this.x+7, this.y-10);
+    
+        var circle2 = new paper.Path.Circle(circlePoint, 3);
+        circle2.fillColor = this.turtleColour;
+    
+        circlePoint = new paper.Point(this.x-7, this.y+10);
+    
+        var circle3 = new paper.Path.Circle(circlePoint, 3);
+        circle3.fillColor = this.turtleColour;
+    
+        circlePoint = new paper.Point(this.x+7, this.y+10);
+    
+        var circle4 = new paper.Path.Circle(circlePoint, 3);
+        circle4.fillColor = this.turtleColour;
+    
+        circlePoint = new paper.Point(this.x-7, this.y-10);
+    
+        var circle5 = new paper.Path.Circle(circlePoint, 3);
+        circle5.fillColor = this.turtleColour;
+    
+        circlePoint = new paper.Point(this.x+10, this.y);
+    
+        var circle6 = new paper.Path.Circle(circlePoint, 5);
+        circle6.fillColor = this.turtleColour;
+    
+        return  new paper.Group([circle1,circle2,circle3,circle4,circle5,circle6,tail]);
+    }else{
+        var circle = new paper.Path.Circle(new paper.Point(this.x, this.y), 4);
+        circle.fillColor = this.turtleColour;
+        return circle;
+    }
 };
 
 /**
@@ -133,19 +139,23 @@ Drawer.prototype.doDeplacement = function() {
  * @return {nothing}
  */
 Drawer.prototype.doRotation = function(){
-    var currentAction = this.getCurrentAction();
-    if(this.currentAngle==undefined){
-        this.currentAngle = currentAction.value;
-    }
-    if(this.currentAngle <= this.speed){
-        // Add the remaining rotation angle and finish the rotation
-        this.turtle.rotate(this.currentAngle*currentAction.sense);
-        this.currentAngle = undefined;
-        this.actionCount++;
-    }else{// do rotation
-        this.currentAngle-=this.speed;
-        this.turtle.rotate(this.speed*currentAction.sense);
-    }
+    // If the turtle is not displayed, it is not the pain to make a rotation
+    // since there is no direction
+    if(this.showTurtle){
+        var currentAction = this.getCurrentAction();
+        if(this.currentAngle==undefined){
+            this.currentAngle = currentAction.value;
+        }
+        if(this.currentAngle <= this.speed){
+            // Add the remaining rotation angle and finish the rotation
+            this.turtle.rotate(this.currentAngle*currentAction.sense);
+            this.currentAngle = undefined;
+            this.actionCount++;
+        }else{// do rotation
+            this.currentAngle-=this.speed;
+            this.turtle.rotate(this.speed*currentAction.sense);
+        }
+    }else{ this.actionCount++;}
 };
 
 /**
@@ -156,7 +166,9 @@ Drawer.prototype.drawCurrentSegment = function() {
     if(this.penMove){
         this.currentSegment.x += this.dx;
         this.currentSegment.y += this.dy;
-        if(this.filling){this.fillColorIfIntersection();}
+        if(this.filling){
+            this.fillColorIfIntersection();
+        }
     }
     this.turtle.translate(this.dx,this.dy);
     this.x = this.turtle.position.x;
@@ -254,23 +266,26 @@ Drawer.prototype.fillColorIfIntersection = function (){
         var last = ptInter._segment2;
         this.countIntersection++;
 
-        // If the point of intersection is not on the part of the coloring path,
-        // ie we start from begin_fill(), we do not do the coloring even if there is intersection.
-
-        //crée le path à remplir
+        // Create the path to fill
         var pathToColor = new paper.Path();
         pathToColor.strokeWidth = this.path.strokeWidth;
-        pathToColor.fillColor = this.fillingColor;
-        pathToColor.strokeColor = this.fillingStrokeColor;
 
-        // Parcourir le Paht tracé et ajouter les segments qui appartiennent à la figure fermée.
-        for(i=this.path.segments.length-1; i > last.index-1; i--){
+        // Go through the plotted Paht and add the segments that belong to the closed figure.
+        
+        pathToColor.add(ptInter.point.x,ptInter.point.y);
+        for(i=this.path.segments.length-2; i > last.index-1; i--){
             var point = this.path.segments[i].point;
             pathToColor.add(point);
         }
-        pathToColor.add(ptInter.point);
+
+        pathToColor.closed = true;
+
+        var pathStrok = pathToColor.clone();
+        pathToColor.fillColor = this.fillingColor;
+        pathStrok.strokeColor = this.fillingStrokeColor;
+
         pathToColor.insertBelow(this.path);
-        this.path.insertBelow(this.turtle);
+        pathStrok.insertBelow(this.turtle);
     }
 };
 
@@ -314,7 +329,9 @@ Drawer.prototype.isPointReached = function() {
         if(this.penMove){
             this.currentSegment.x = this.arrivalPoint.x;
             this.currentSegment.y = this.arrivalPoint.y;
-            if(this.filling){this.fillColorIfIntersection();}
+            if(this.filling){
+                this.fillColorIfIntersection();
+            }
         }
         this.x = this.arrivalPoint.x;
         this.y = this.arrivalPoint.y;

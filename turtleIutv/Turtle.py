@@ -24,8 +24,9 @@ class Turtle(widgets.DOMWidget):
     canvasSize = Int(sync=True)
     canvasElementSize = Int(sync=True)
     turtleShow = Bool(sync=True)
+    backgroundColor = Unicode().tag(sync=True)
 
-    def __init__(self, ce, cs, t):
+    def __init__(self, width, limit, color,turtle):
         '''Create a Turtle.
 
         Example::
@@ -33,14 +34,15 @@ class Turtle(widgets.DOMWidget):
             t = Turtle(canvas, 500,1000)
         '''
         super(Turtle, self).__init__()
-        self.canvasSize = cs
-        self.canvasElementSize = ce
-        self.turtleShow = t
+        self.canvasElementSize = width
+        self.canvasSize = limit
+        self.backgroundColor = color
+        self.turtleShow = turtle
         install_js()
         display(self)
         # scale that allows you to place the points
         # according to the size of the canvas and the grid
-        self.scale = ce/cs
+        self.scale = width/limit
         
         self.angle = 90
         self.filling = False

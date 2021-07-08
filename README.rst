@@ -12,30 +12,31 @@ Install it in a terminal/command prompt with::
 
     pip install git+https://gitlab.sorbonne-paris-nord.fr/11928898/turtleiutv.git
 
-
 Using it looks like this::
 
     from turtleIutv import *
-    drawing()
+    drawing(width = 500, limit = 1000, color = "#D2D1CF", turtle =True)
     speed(5)
     colours=["red","blue","yellow","brown","black","purple","green"]
-    up() 
+    up()
     left(90)
     forward(200)
     right(90)
     down()
     i = 0
-    while i < 18:
+    while i < 28:
         setColor(colours[i%7])
-        right(20)
+        setSize(i%7)
+        speed(i%10)
+        right(13)
         forward(50)
         i += 1
-    goto(200, 200)
+    home()
+    begin_fill("red","yellow")
+    circle(100)
+    end_fill()
 
 .. image:: sample.png
 
 .. image:: http://mybinder.org/badge.svg
    :target: https://beta.mybinder.org/v2/gh/lacroix/turtleIutv/master?filepath=try.ipynb
-
-
-les blème d'installation

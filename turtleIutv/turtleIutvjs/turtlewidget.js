@@ -1,6 +1,6 @@
 define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbextensions/turtleIutvjs/drawer'], function(paperlib, widget){
 
-    function TurtleDrawing(canvas_element, canvasElementSize, canvasSize, grid_button, help_button) {
+    function TurtleDrawing(canvas_element, canvasElementSize, canvasSize,turtleShow, grid_button, help_button) {
         this.canvasSize = canvasSize;
         this.canvasElementSize = canvasElementSize;
         this.canvas = canvas_element;
@@ -11,7 +11,7 @@ define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbexten
         paper.setup(this.canvas);
 
         var start = new paper.Point(this.x,this.y);
-        this.drawer = new Drawer(start);
+        this.drawer = new Drawer(start,turtleShow);
 
         $( window ).resize(function() {
             $( "#log" ).append( "<div>Handler for .resize() called.</div>" );
@@ -53,7 +53,7 @@ define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbexten
         
         this.help_button = help_button;
         this.help_button.click(function (event){
-            alert("example:\nfrom turtleIutv import *\ndrawing()\nforward(50)\n");
+            alert("example:\nfrom turtleIutv import *\ndrawing()\nforward(50)\n https://gitlab.sorbonne-paris-nord.fr/11928898/turtleiutv");
         });
 
         // Loop, must go through each new action and make an animation if necessary
@@ -114,7 +114,7 @@ define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbexten
 
             var canvasSize = this.model.get('canvasSize');
             var canvasElementSize = this.model.get('canvasElementSize');
-            var turtleShow = this.model.get('turtleShow') ? 1 : 0;
+            var turtleShow = this.model.get('turtleShow');
             var canvasDiv = $('<div/>');
             turtleArea.append(canvasDiv);
             
@@ -126,8 +126,9 @@ define(['nbextensions/turtleIutvjs/paper-full', "@jupyter-widgets/base",'nbexten
 
             canvasDiv.append(canvas);
             
-            this.turtledrawing = new TurtleDrawing(canvas,canvasElementSize, canvasSize, gridButton, helpButton);
+            this.turtledrawing = new TurtleDrawing(canvas,canvasElementSize, canvasSize, turtleShow, gridButton, helpButton);
             this.turtledrawing.drawer.actions = this.model.get('actions');
+            this.turtledrawing.canvas.style.background = this.model.get('backgroundColor');
             
             this.$el.append(turtleArea);
             window.debugturtle = this;
