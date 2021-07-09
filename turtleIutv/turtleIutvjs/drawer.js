@@ -321,13 +321,17 @@ Drawer.prototype.fillColorIfIntersection = function (){
         }
         // close the path
         pathToColor.closed = true;
-        // make the color
+        // create a path that will have the border color
+        var pathStrok = pathToColor.clone();
+        // Fill the color to the pathToColor
         pathToColor.fillColor = this.fillingColor;
-        pathToColor.strokeColor = this.fillingStrokeColor;
+        // Color the border
+        pathStrok.strokeColor = this.fillingStrokeColor;
         // bring the turtle above the path
-        // that make visible the turtle
+        // that make the turtle et the stroke visible
         // when passing through the colored figure
-        pathToColor.insertBelow(this.turtle);
+        pathToColor.insertBelow(this.path);
+        pathStrok.insertBelow(this.turtle);
     }
 };
 
