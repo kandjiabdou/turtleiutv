@@ -18,9 +18,9 @@ turtleTmp = None
 def drawing(width=500, limit=1000, color="#99CCFF", turtle=True):
     """Start a drawing
 
-    Example::
+        Example::
 
-    drawing()
+            drawing()
     """
     global turtleTmp
     turtleTmp = Turtle(width, limit, color, turtle)
@@ -117,8 +117,8 @@ def down():
 
 def setColor(color):
     """Change the color of the pen.
-        Color can be a string like :
-        "red", "blue", "yellow", "brown", "black", "purple", "green"
+        CSS Color can be a string like (16 string color) :
+        "red", "blue", "yellow", "brown", "black", "purple", "green" ...
         or hexadecimal
 
         Example::
@@ -126,6 +126,15 @@ def setColor(color):
             setColor("#ABD011")
     """
     turtleTmp.penColor(color)
+
+def setRandomColor():
+    """Change the color of the pen with a random color
+    Use penColor() with "random" as parameter
+        Example::
+
+            setRandomColor()
+    """
+    turtleTmp.penColor("random")
 
 
 def setSize(size):
