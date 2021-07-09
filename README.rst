@@ -1,4 +1,4 @@
-Fork of Turtle package `mobilechelonian <https://github.com/takluyver/mobilechelonian>`.
+Fork of Turtle package `mobilechelonian <https://github.com/takluyver/mobilechelonian>`_.
 
 *"Nevertheless... the turtle moves!"* - Small Gods, by Terry Pratchett
 
@@ -7,6 +7,8 @@ This is a Turtle module for the Jupyter Notebook. It's based on code by
 `Macewan University <http://macewan.ca/wcm/index.htm>`_ that built Turtle
 as a class assignment (the other was `PACattack <http://macewancmpt395.github.io/PACattack/>`_;
 I could have based this on either, but I had to pick one).
+
+This extension was made as part of a 3-month internship at the iut of villetaneuse under the supervision of `M. Lacroix <https://github.com/mathieuLacroix>`_.
 
 Install it in a terminal/command prompt with::
 

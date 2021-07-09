@@ -4,12 +4,12 @@ with open("README.rst", "r") as f:
     readme = f.read()
 
 setup(name='turtleIutv',
-      version='1.0',
+      version='1.1',
       description='Turtles in the Jupyter Notebook',
-      long_description = readme,
-      author='Mathieu Lacroix',
-      author_email='lacroix@univ-paris13.fr',
-      url='https://github.com/mathieuLacroix/turtleIutv',
+      long_description=readme,
+      author='Abdou KANDJI',
+      author_email='abdou.k.kandji@gmail.com',
+      url='https://github.com/kandjiabdou/turtleIutv',
       packages=['turtleIutv'],
       package_data={'turtleIutv': ['turtleIutvjs/*.js']},
       include_package_data=True,
@@ -22,5 +22,4 @@ setup(name='turtleIutv',
           'Topic :: Artistic Software',
           'Topic :: Education',
       ],
-      install_requires=['IPython', 'ipywidgets>=7.0.0'],
-)
+      install_requires=['IPython', 'ipywidgets>=7.0.0'])
