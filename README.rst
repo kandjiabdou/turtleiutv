@@ -40,5 +40,5 @@ Using it looks like this::
 
 .. image:: sample.png
 
-.. image:: http://mybinder.org/badge.svg
-   :target: https://beta.mybinder.org/v2/gh/lacroix/turtleIutv/master?filepath=try.ipynb
+.. image:: https://mybinder.org/badge_logo.svg
+ :target: https://mybinder.org/v2/gh/kandjiabdou/turtleiutv/master?filepath=try.ipynb
