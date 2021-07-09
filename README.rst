@@ -12,7 +12,7 @@ This extension was made as part of a 3-month internship at the iut of villetaneu
 
 Install it in a terminal/command prompt with::
 
-    pip install git+https://gitlab.sorbonne-paris-nord.fr/11928898/turtleiutv.git
+    pip install git+https://github.com/kandjiabdou/turtleiutv.git
 
 Using it looks like this::
 
