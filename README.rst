@@ -9,7 +9,12 @@ Test on Binder
 .. image:: https://mybinder.org/badge_logo.svg
  :target: https://mybinder.org/v2/gh/kandjiabdou/turtleiutv/master?filepath=try.ipynb
 
-Fork of Turtle package `mobilechelonian <https://github.com/takluyver/mobilechelonian>`_.
+
+
+
+TurtleIutv
+
+This extension is a Fork of Turtle package `mobilechelonian <https://github.com/takluyver/mobilechelonian>`_.
 
 *"Nevertheless... the turtle moves!"* - Small Gods, by Terry Pratchett
 
