@@ -1,4 +1,5 @@
 from .Turtle import Turtle
+from random import randint
 
 __version__ = '1.1'
 
@@ -125,16 +126,18 @@ def setColor(color):
 
             setColor("#ABD011")
     """
+    turtleTmp.color = color
     turtleTmp.penColor(color)
+
 
 def setRandomColor():
     """Change the color of the pen with a random color
-    Use penColor() with "random" as parameter
+    Use setColor() with "getRandomColor()" as parameter
         Example::
 
             setRandomColor()
     """
-    turtleTmp.penColor("random")
+    setColor(getRandomColor())
 
 
 def setSize(size):
@@ -199,3 +202,18 @@ def circle(radius, extent=360):
             circle(50)
     """
     turtleTmp.circle(radius, extent)
+
+
+def getRandomColor():
+    """Return a random color
+
+        Example::
+
+            getRandomColor()
+
+            >> rgb(0, 255, 15)
+    """
+    r = randint(0, 255)
+    g = randint(0, 255)
+    b = randint(0, 255)
+    return "rgb(" + str(r) + ", " + str(g) + ", " + str(b) +")"

@@ -346,7 +346,7 @@ Drawer.prototype.updatePath = function(color,size){
     // create a new path
     var start = new paper.Point(this.x, this.y);
     this.path = new paper.Path();
-    this.path.strokeColor = color==="random" ? new paper.Color.random() : color;
+    this.path.strokeColor = color;
     this.path.strokeWidth = size;
     this.path.add(start);
     this.path.add(start);
