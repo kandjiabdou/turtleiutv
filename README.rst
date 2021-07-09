@@ -1,8 +1,10 @@
 ## Read the documantation
 
-[![Documentation Status](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](https://github.com/kandjiabdou/turtleiutv/wiki)
+.. image:: https://img.shields.io/readthedocs/pip
+ :target: https://github.com/kandjiabdou/turtleiutv/wiki
 
 ## Test on Binder
+
 .. image:: https://mybinder.org/badge_logo.svg
  :target: https://mybinder.org/v2/gh/kandjiabdou/turtleiutv/master?filepath=try.ipynb
 
