@@ -1,3 +1,11 @@
+## Read the documantation
+
+[![Documentation Status](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](https://github.com/kandjiabdou/turtleiutv/wiki)
+
+## Test on Binder
+.. image:: https://mybinder.org/badge_logo.svg
+ :target: https://mybinder.org/v2/gh/kandjiabdou/turtleiutv/master?filepath=try.ipynb
+
 Fork of Turtle package `mobilechelonian <https://github.com/takluyver/mobilechelonian>`_.
 
 *"Nevertheless... the turtle moves!"* - Small Gods, by Terry Pratchett
@@ -39,6 +47,3 @@ Using it looks like this::
     end_fill()
 
 .. image:: sample.png
-
-.. image:: https://mybinder.org/badge_logo.svg
- :target: https://mybinder.org/v2/gh/kandjiabdou/turtleiutv/master?filepath=try.ipynb
