@@ -277,7 +277,7 @@ Drawer.prototype.doFilling = function (){
         this.filling = !this.filling;
         if(this.filling){
             // if it is true, create a new path to start drawing
-            this.fillingColor = currentAction.color;
+            this.fillingColor = currentAction.fillColor;
             this.fillingStrokeColor = currentAction.strokeColor;
             var color = this.path.strokeColor ;
             var size = this.path.strokeWidth;

@@ -146,7 +146,7 @@ def setSize(size):
     turtleTmp.penSize(max(1, min(size, 100)))
 
 
-def begin_fill(color="black", strokeColor="black"):
+def begin_fill(*args,**kwargs):
     """ Start the process of coloring a figure, if the path is closed.
         Color can be a string like :
         "red", "blue", "yellow", "brown", "black", "purple", "green"
@@ -156,7 +156,24 @@ def begin_fill(color="black", strokeColor="black"):
 
             begin_fill("red")
     """
-    turtleTmp.begin_fill(color, strokeColor)
+    if(len(args)==2 and len(kwargs)==0):
+        turtleTmp.begin_fill(args[0], args[1])
+    elif (len(args)==1 and len(kwargs)==0):
+        turtleTmp.begin_fill(args[0], turtleTmp.color)
+    elif (len(args)==0 and len(kwargs)==1):
+        if("borderColor" in kwargs):
+            turtleTmp.begin_fill(kwargs["borderColor"], turtleTmp.color)
+        else:
+            turtleTmp.begin_fill(turtleTmp.color, kwargs["fillColor"])
+    elif (len(args)==1 and len(kwargs)==1):
+        if("borderColor" in kwargs):
+            turtleTmp.begin_fill(kwargs["borderColor"], args[0])
+        else:
+            turtleTmp.begin_fill(args[0], kwargs["fillColor"])
+    elif(len(kwargs)==2 and len(args)==0):
+        turtleTmp.begin_fill(kwargs["borderColor"], kwargs["fillColor"])
+    else:
+        turtleTmp.begin_fill(turtleTmp.color, turtleTmp.color)
 
 
 def end_fill():

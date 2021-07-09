@@ -46,6 +46,7 @@ class Turtle(widgets.DOMWidget):
         self.scale = width/limit
         self.angle = 90
         self.filling = False
+        self.color = "black"
         self.fillingColor = "black"
         self.fillingStrokeColor = "black"
         self.actions = []
@@ -215,7 +216,7 @@ class Turtle(widgets.DOMWidget):
             type="shifting", point=dict(x=self.posX, y=self.posY))
         self.actions = self.actions + [action]
 
-    def begin_fill(self, color, strokeColor):
+    def begin_fill(self, borderColor, fillColor):
         """ Start the process of coloring a figure, if the path is closed.
         Color can be a string like :
         "red", "blue", "yellow", "brown", "black", "purple", "green"
@@ -226,11 +227,11 @@ class Turtle(widgets.DOMWidget):
             begin_fill("red")
         """
         self.filling = True
-        self.fillingColor = color
-        self.fillingStrokeColor = strokeColor
+        self.fillingColor = fillColor
+        self.fillingStrokeColor = borderColor
         action = dict(
-            type="filling", value=True, color=color,
-            strokeColor=strokeColor)
+            type="filling", value=True, fillColor=fillColor,
+            strokeColor=borderColor)
         self.actions = self.actions + [action]
 
     def end_fill(self):
@@ -279,7 +280,7 @@ class Turtle(widgets.DOMWidget):
         # Because the raising of the pen stop the process of coloring
         if(self.filling):
             self.end_fill()
-            self.begin_fill(self.fillingColor, self.fillingStrokeColor)
+            self.begin_fill(self.fillingStrokeColor, self.fillingColor)
 
         self.left(w2)
         for i in range(steps):
@@ -295,7 +296,7 @@ class Turtle(widgets.DOMWidget):
         self.pendown()
         if(self.filling):
             self.end_fill()
-            self.begin_fill(self.fillingColor, self.fillingStrokeColor)
+            self.begin_fill(self.fillingStrokeColor, self.fillingColor)
 
     def home(self):
         '''Move the Turtle to its home position.
